@@ -1,26 +1,30 @@
 #include <stdio.h>
 
 #include "EyeTracker.h"
-
+#include "Timer.h"
 
 EyeTracker::EyeTracker()
 {
-	namedWindow("srcFrame", 1);
-	namedWindow("dstFrame", 1);
+	//namedWindow("srcFrame", 1);
+	//namedWindow("dstFrame", 1);
 
 	modulesCount = 3;
 
 	modules[0] = new FrameAcquisitor();
 	modules[1] = new FramePreprocessor();
 	modules[2] = new FrameDetector();
-}
 
+	FrameAcquisitor *frAcquisitor = (FrameAcquisitor*) modules[0];
+	frAcquisitor->acquistionSourceSet(ACQUISITION_VIDEO_CAP);
+
+	FrameDetector *frDetector = (FrameDetector*)modules[2];
+	frDetector->moduleSetTestModeState(false);
+}
 
 EyeTracker::~EyeTracker()
 {
-
+	
 }
-
 
 void EyeTracker::applicationModulesInit()
 {
@@ -29,7 +33,6 @@ void EyeTracker::applicationModulesInit()
 		modules[i]->moduleInit();
 	}
 }
-
 
 void EyeTracker::applicationModulesDeinit()
 {
@@ -49,9 +52,6 @@ void EyeTracker::startApplicationLoop()
 		{
 			modules[j]->moduleProcess(srcFrame, dstFrame);
 		}
-
-		//printf("DBG: [%d][%d]\n", srcFrame.rows, srcFrame.cols);
-		//printf("DBG: [%d][%d]\n", dstFrame.rows, dstFrame.cols);
 
 		if (!srcFrame.empty())
 		{

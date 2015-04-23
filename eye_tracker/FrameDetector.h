@@ -1,6 +1,10 @@
 #include "opencv2\opencv.hpp"
 #include "AppModule.h"
 
+#include "HoughDetector.h"
+#include "MeansOfGradientsDetector.h"
+#include "Timer.h"
+
 using namespace cv;
 
 class FrameDetector : public AppModule
@@ -11,6 +15,17 @@ private:
 
 	vector<Rect> faces;
 	vector<Rect> eyes;
+
+	Mat faceRoi;
+	Mat eye1Roi;
+	Mat eye2Roi;
+
+	HoughDetector houghEyeCenterDetector;
+	MeansOfGradientsDetector meansOfGradientsDetector;
+
+	bool testMode;
+
+	Timer benchmark;
 	
 public:
 	FrameDetector();
@@ -19,5 +34,9 @@ public:
 	void moduleInit(void);
 	void moduleDeinit(void);
 	void moduleProcess(Mat &srcFrame, Mat &dstFrame);
+	void printEyes(void);
+
+	void moduleSetTestModeState(bool mode);
+	bool isTestModeOn();
 };
 
