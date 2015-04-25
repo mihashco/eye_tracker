@@ -15,7 +15,8 @@ MeansOfGradientsDetector::~MeansOfGradientsDetector()
 
 void MeansOfGradientsDetector::showSettingsWin(void)
 {
-	//
+	namedWindow("MeansOfGradientsSettingsWin", 1);
+//	createTrackbar("Method", "HoughDetectorSettingsWin", &this->weightDiv, NULL, NULL);
 }
 
 double MeansOfGradientsDetector::computeTreshold(Mat &magnitudes, double devFactor)
