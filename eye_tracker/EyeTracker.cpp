@@ -3,11 +3,10 @@
 #include "EyeTracker.h"
 #include "Timer.h"
 
+#include "opencv2\gpu\gpu.hpp"
+
 EyeTracker::EyeTracker()
 {
-	//namedWindow("srcFrame", 1);
-	//namedWindow("dstFrame", 1);
-
 	modulesCount = 3;
 
 	modules[0] = new FrameAcquisitor();
@@ -19,11 +18,13 @@ EyeTracker::EyeTracker()
 
 	FrameDetector *frDetector = (FrameDetector*)modules[2];
 	frDetector->moduleSetTestModeState(false);
+
+	std::cout << "EyeTracker Constructor" << gpu::getCudaEnabledDeviceCount() << std::endl;
 }
 
 EyeTracker::~EyeTracker()
 {
-	
+	this->applicationModulesDeinit();
 }
 
 void EyeTracker::applicationModulesInit()

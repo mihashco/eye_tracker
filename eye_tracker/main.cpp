@@ -12,6 +12,7 @@ int main(int, char**)
 
 	eyeTrackerApplication.applicationModulesInit();
 	eyeTrackerApplication.startApplicationLoop();
+	eyeTrackerApplication.applicationModulesDeinit();
 
 	return 0;
 }
