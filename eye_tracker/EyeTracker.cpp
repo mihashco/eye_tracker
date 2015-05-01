@@ -19,7 +19,7 @@ EyeTracker::EyeTracker()
 	FrameDetector *frDetector = (FrameDetector*)modules[2];
 	frDetector->moduleSetTestModeState(false);
 
-	std::cout << "EyeTracker Constructor" << gpu::getCudaEnabledDeviceCount() << std::endl;
+	//std::cout << "EyeTracker Constructor" << gpu::getCudaEnabledDeviceCount() << std::endl;
 }
 
 EyeTracker::~EyeTracker()
