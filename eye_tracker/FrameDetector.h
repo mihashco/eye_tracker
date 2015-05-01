@@ -3,7 +3,6 @@
 
 #include "HoughDetector.h"
 #include "MeansOfGradientsDetector.h"
-#include "CustomEyeCenterDetector.h"
 #include "Timer.h"
 
 using namespace cv;
@@ -23,7 +22,6 @@ private:
 
 	HoughDetector houghEyeCenterDetector;
 	MeansOfGradientsDetector meansOfGradientsDetector;
-	CustomEyeCenterDetector cstDetector;
 
 	bool testMode;
 

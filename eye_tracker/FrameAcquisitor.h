@@ -7,7 +7,6 @@
 enum AcqusitionSource{
 	ACQUISITION_VIDEO_CAP = 0,
 	ACQUISITION_IMAGES,
-	ACQUISITION_TEST_VIDEO,
 };
 
 using namespace cv;
