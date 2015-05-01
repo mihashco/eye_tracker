@@ -4,8 +4,6 @@ MeansOfGradientsDetector::MeansOfGradientsDetector()
 {
 	this->weightDiv = 50.0;
 	this->weightEnabled = true;
-
-	namedWindow("Debug", 1);
 }
 
 MeansOfGradientsDetector::~MeansOfGradientsDetector()
@@ -107,7 +105,7 @@ Point MeansOfGradientsDetector::detect(Mat &img)
 	}
 
 	//blur source data
-	GaussianBlur(img, weight, Size(6, 6), 0, 0);
+	GaussianBlur(img, weight, Size(3, 3), 0, 0);
 
 	//invert image -> opencv function can be used for that operation
 	for (int i = 0; i < weight.rows; ++i)
