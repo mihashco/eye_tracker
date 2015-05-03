@@ -4,13 +4,32 @@ CustomEyeCenterDetector::CustomEyeCenterDetector()
 {
 	namedWindow("Debug1", 0);
 	namedWindow("Debug2", 0);
-	this->kernel = getStructuringElement(CV_SHAPE_ELLIPSE, Size(5, 5));
+	namedWindow("Settings", 1);
+
+	moveWindow("Debug1", 400, 0);
+	moveWindow("Debug2", 400, 320);
+	moveWindow("Settings", 400, 320 * 2);
+
+	resizeWindow("Debug1", 300, 300);
+	resizeWindow("Debug2", 300, 300);
+
+	this->kernel = getStructuringElement(CV_SHAPE_ELLIPSE, Size(3, 3));
 
 	this->thresh = 220;
 	this->threshMaxValue = 255;
+	this->contourSize = 5;
 
-	createTrackbar("binLevelLow", "Debug1", &this->thresh, 255, NULL, NULL);
-	createTrackbar("binLevelHigh", "Debug1", &this->threshMaxValue, 255, NULL, NULL);
+	this->minArea = 0;
+	this->maxArea = 200;
+	/*
+	createTrackbar("cannyThreshold1", "Settings", &this->cannyThreshold1, 2000, NULL, NULL);
+	createTrackbar("cannyThreshold2", "Settings", &this->cannyThreshold2, 4000, NULL, NULL);
+	createTrackbar("cannyApertureSize", "Settings", &this->cannyApertureSize, 10, NULL, NULL);
+
+	createTrackbar("contourSize", "Settings", &this->contourSize, 50, NULL, NULL);
+	createTrackbar("minArea", "Settings", &this->minArea, 200, NULL, NULL);
+	createTrackbar("maxArea", "Settings", &this->maxArea, 200, NULL, NULL);
+	createTrackbar("threshold", "Settings", &this->thresh, 255, NULL, NULL);*/
 }
 
 CustomEyeCenterDetector::~CustomEyeCenterDetector()
@@ -20,31 +39,61 @@ CustomEyeCenterDetector::~CustomEyeCenterDetector()
 
 Point CustomEyeCenterDetector::detect(Mat &imgSource)
 {
-	Mat dst;
-	dst = ~imgSource;
+	//NOTE: Do not remove this!
+	vector<vector<Point> > contours;
+	vector<Vec4i> hierarchy;
+	Mat edges;
 
-	threshold(dst, dst, this->thresh, this->threshMaxValue, THRESH_BINARY);
-	std::vector<std::vector<cv::Point> > contours;
+	resize(imgSource, imgSource, Size(300, 300));
+	equalizeHist(imgSource, imgSource);
 
-	findContours(dst.clone(), contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-	drawContours(dst, contours, -1, CV_RGB(255, 255, 255), -1);
+	for (int i = 0; i < 6; i++)
+	{
+		erode(imgSource, imgSource, this->kernel);
+		blur(imgSource, imgSource, Size(5, 5));
+	}
+	Mat gradX, gradY, grad, magnitudes, angles, cnvMagnitudes, cnvAngles;
+
+	Sobel(imgSource, gradX, CV_32F, 0, 1, 3, 1, 1);
+	Sobel(imgSource, gradY, CV_32F, 1, 0, 3, 1, 1);
+
+	addWeighted(gradX, 0.5, gradY, 0.5, 0, grad);
+	cartToPolar(gradX, gradY, magnitudes, angles);
+
+	magnitudes.convertTo(cnvMagnitudes, CV_8U);
+
+	//cnvMagnitudes = ~cnvMagnitudes;
+	//threshold(cnvMagnitudes, cnvMagnitudes, this->thresh, this->threshMaxValue, THRESH_BINARY);
+
+	Canny(cnvMagnitudes, edges, (double) (cannyThreshold1/10), (double) (cannyThreshold2/10), 3, false);
+	findContours(edges, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	
+	vector<RotatedRect> minEllipse(contours.size());
 
 	for (int i = 0; i < contours.size(); i++)
 	{
-		double area = cv::contourArea(contours[i]);
-		cv::Rect rect = cv::boundingRect(contours[i]);
-		int radius = rect.width / 2;
-
-		// If contour is big enough and has round shape
-		// Then it is the pupil
-		if (area >= 30 &&
-			std::abs(1 - ((double)rect.width / (double)rect.height)) <= 0.2 &&
-			std::abs(1 - (area / (CV_PI * std::pow(radius, 2)))) <= 0.2)
+		if (contours[i].size() > this->contourSize)
 		{
-			cv::circle(dst, cv::Point(rect.x + radius, rect.y + radius), radius, CV_RGB(255, 0, 0), 2);
+			double area = cv::contourArea(contours[i]);
+			cv::Rect rect = cv::boundingRect(contours[i]);
+
+			if (area >= minArea && area <= maxArea)
+			{
+				minEllipse[i] = fitEllipse(Mat(contours[i]));
+			}
 		}
 	}
+	
+	Mat drawing = Mat::zeros(imgSource.size() , CV_8UC3);
+	for (int i = 0; i< contours.size(); i++)
+	{
+		Scalar color = Scalar(255,255,255);
+		ellipse(imgSource, minEllipse[i], color, 1, 8);
+	}
 
-	imshow("Debug1", dst);
+
+	imshow("Debug1", cnvMagnitudes);
+	imshow("Debug2", imgSource);
+
 	return Point(-1, -1);
 }

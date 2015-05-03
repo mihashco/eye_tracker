@@ -28,7 +28,7 @@ void FrameDetector::moduleProcess(Mat &srcFrame, Mat &dstFrame)
 {
 
 //	this->benchmark.begin();
-	faceClassifier.detectMultiScale(srcFrame, faces, 1.4, 5, 0 | CASCADE_SCALE_IMAGE, Size(30, 30));
+	faceClassifier.detectMultiScale(srcFrame, faces, 1.8, 7, 0 | CASCADE_SCALE_IMAGE, Size(30, 30));
 	dstFrame = srcFrame.clone();
 
 	for (int i = 0; i < faces.size(); i++)
@@ -41,8 +41,10 @@ void FrameDetector::moduleProcess(Mat &srcFrame, Mat &dstFrame)
 
 		for (int j = 0; j < eyes.size(); j++)
 		{
-			Mat eyeRoi = faceRoi(eyes[j]);
-			Point p = cstDetector.detect(eyeRoi);
+			Mat tmp = faceRoi(eyes[j]);
+			Rect crop(0, tmp.size().height * 0.2, tmp.size().width, tmp.size().height * 0.7);
+			Mat eyeRoi = tmp(crop);
+			Point p = lDetector.detect(eyeRoi);
 		}
 	}
 }

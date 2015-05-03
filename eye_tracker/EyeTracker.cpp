@@ -19,6 +19,16 @@ EyeTracker::EyeTracker()
 	FrameDetector *frDetector = (FrameDetector*)modules[2];
 	frDetector->moduleSetTestModeState(false);
 
+	//set window proprties;
+	namedWindow("dstFrame", 0);
+	namedWindow("srcFrame", 0);
+
+	moveWindow("srcFrame", 0, 0);
+	resizeWindow("srcFrame", 400, 320);
+
+	moveWindow("dstFrame", 0, 320);
+	resizeWindow("dstFrame", 400, 320);
+
 	//std::cout << "EyeTracker Constructor" << gpu::getCudaEnabledDeviceCount() << std::endl;
 }
 
@@ -63,7 +73,7 @@ void EyeTracker::startApplicationLoop()
 			imshow("dstFrame", dstFrame);
 		}
 
-		if (waitKey(1) == 30)
+		if (waitKey(5) == 30)
 		{
 			for (j = 0; j < 2; j++)
 			{

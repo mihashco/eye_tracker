@@ -4,6 +4,7 @@
 #include "HoughDetector.h"
 #include "MeansOfGradientsDetector.h"
 #include "CustomEyeCenterDetector.h"
+#include "LaplaceDetector.h"
 #include "Timer.h"
 
 using namespace cv;
@@ -24,6 +25,7 @@ private:
 	HoughDetector houghEyeCenterDetector;
 	MeansOfGradientsDetector meansOfGradientsDetector;
 	CustomEyeCenterDetector cstDetector;
+	LaplaceDetector lDetector;
 
 	bool testMode;
 

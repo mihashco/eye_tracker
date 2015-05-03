@@ -13,6 +13,17 @@ private:
 	int thresh;
 	int threshMaxValue;
 
+	SimpleBlobDetector blobDetector;
+
+	int cannyThreshold1;
+	int cannyThreshold2;
+	int cannyApertureSize = 3;
+	bool cannyL2grad = false;
+
+	int contourSize;
+	int minArea;
+	int maxArea;
+
 public:
 	CustomEyeCenterDetector();
 	~CustomEyeCenterDetector();

@@ -79,6 +79,7 @@ Point MeansOfGradientsDetector::detect(Mat &img)
 
 	addWeighted(gradX, 0.5, gradY, 0.5, 0, grad);
 	cartToPolar(gradX, gradY, magnitudes, angles);
+
 	tresh = this->computeTreshold(magnitudes, this->weightDiv);
 
 	for (int i = 0; i < img.rows; ++i)
@@ -139,5 +140,6 @@ Point MeansOfGradientsDetector::detect(Mat &img)
 	gradients = weight.rows * weight.cols;
 	outSum.convertTo(out, CV_32F, 1.0 / gradients);
 	minMaxLoc(out, NULL, &maxVal, NULL, &maxP);
+	
 	return maxP;
 }

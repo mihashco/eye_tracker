@@ -17,6 +17,9 @@ private:
 	int param2;
 	int minRadious;
 	int maxRadious;
+
+	Mat kernel;
+
 public:
 	HoughDetector();
 	~HoughDetector();
