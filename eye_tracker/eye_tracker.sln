@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eye_tracker", "eye_tracker.vcxproj", "{A61F8032-FCE3-4606-9622-B9A71DA0991A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eye_tracker", "eye_tracker.vcxproj", "{BFCA291F-EF04-4E08-ACAE-75669952E7EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,19 +13,16 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A61F8032-FCE3-4606-9622-B9A71DA0991A}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A61F8032-FCE3-4606-9622-B9A71DA0991A}.Debug|Win32.Build.0 = Debug|Win32
-		{A61F8032-FCE3-4606-9622-B9A71DA0991A}.Debug|x64.ActiveCfg = Debug|x64
-		{A61F8032-FCE3-4606-9622-B9A71DA0991A}.Debug|x64.Build.0 = Debug|x64
-		{A61F8032-FCE3-4606-9622-B9A71DA0991A}.Release|Win32.ActiveCfg = Release|Win32
-		{A61F8032-FCE3-4606-9622-B9A71DA0991A}.Release|Win32.Build.0 = Release|Win32
-		{A61F8032-FCE3-4606-9622-B9A71DA0991A}.Release|x64.ActiveCfg = Release|x64
-		{A61F8032-FCE3-4606-9622-B9A71DA0991A}.Release|x64.Build.0 = Release|x64
+		{BFCA291F-EF04-4E08-ACAE-75669952E7EA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BFCA291F-EF04-4E08-ACAE-75669952E7EA}.Debug|Win32.Build.0 = Debug|Win32
+		{BFCA291F-EF04-4E08-ACAE-75669952E7EA}.Debug|x64.ActiveCfg = Debug|x64
+		{BFCA291F-EF04-4E08-ACAE-75669952E7EA}.Debug|x64.Build.0 = Debug|x64
+		{BFCA291F-EF04-4E08-ACAE-75669952E7EA}.Release|Win32.ActiveCfg = Release|Win32
+		{BFCA291F-EF04-4E08-ACAE-75669952E7EA}.Release|Win32.Build.0 = Release|Win32
+		{BFCA291F-EF04-4E08-ACAE-75669952E7EA}.Release|x64.ActiveCfg = Release|x64
+		{BFCA291F-EF04-4E08-ACAE-75669952E7EA}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

@@ -13,6 +13,8 @@ private:
 	int thresh;
 	int threshMaxValue;
 
+	FeatureDetector *fdetector;
+
 public:
 	CustomEyeCenterDetector();
 	~CustomEyeCenterDetector();

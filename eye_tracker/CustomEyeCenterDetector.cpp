@@ -3,7 +3,7 @@
 CustomEyeCenterDetector::CustomEyeCenterDetector()
 {
 	namedWindow("Debug1", 0);
-	namedWindow("Debug2", 0);
+	//namedWindow("Debug2", 0);
 	this->kernel = getStructuringElement(CV_SHAPE_ELLIPSE, Size(5, 5));
 
 	this->thresh = 220;
@@ -11,6 +11,8 @@ CustomEyeCenterDetector::CustomEyeCenterDetector()
 
 	createTrackbar("binLevelLow", "Debug1", &this->thresh, 255, NULL, NULL);
 	createTrackbar("binLevelHigh", "Debug1", &this->threshMaxValue, 255, NULL, NULL);
+
+	fdetector = FeatureDetector::create("MSER");
 }
 
 CustomEyeCenterDetector::~CustomEyeCenterDetector()
@@ -21,9 +23,19 @@ CustomEyeCenterDetector::~CustomEyeCenterDetector()
 Point CustomEyeCenterDetector::detect(Mat &imgSource)
 {
 	Mat dst;
-	dst = ~imgSource;
+	dst = imgSource.clone();
+	resize(dst, dst, Size(200, 200));
 
-	threshold(dst, dst, this->thresh, this->threshMaxValue, THRESH_BINARY);
+	GaussianBlur(dst, dst, Size(3, 3), 2, 2);
+	//erode(dst, dst, this->kernel);
+	
+	/*erode(dst, dst, this->kernel);
+	GaussianBlur(dst, dst, Size(9, 9), 2, 2);
+	erode(dst, dst, this->kernel);
+	GaussianBlur(dst, dst, Size(9, 9), 2, 2);*/
+
+	equalizeHist(dst, dst);
+	//threshold(dst, dst, this->thresh, this->threshMaxValue, THRESH_BINARY);
 	std::vector<std::vector<cv::Point> > contours;
 
 	findContours(dst.clone(), contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
@@ -44,7 +56,7 @@ Point CustomEyeCenterDetector::detect(Mat &imgSource)
 			cv::circle(dst, cv::Point(rect.x + radius, rect.y + radius), radius, CV_RGB(255, 0, 0), 2);
 		}
 	}
-
+		
 	imshow("Debug1", dst);
 	return Point(-1, -1);
 }
