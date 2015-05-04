@@ -10,4 +10,3 @@ public:
 	void moduleDeinit();
 	void moduleProcess(Mat &inFrame, Mat &outFrame);
 };
-

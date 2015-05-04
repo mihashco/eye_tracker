@@ -53,7 +53,7 @@ void FrameDetector::moduleProcess(Mat &srcFrame, Mat &dstFrame)
 			Mat eyeRoi = faceRoi(eyes[j]);
 			rectangle(dstFrame, Rect(faces[i].x + eyes[j].x, faces[i].y + eyes[j].y, eyes[j].width, 
 				eyes[j].height), Scalar(255, 255, 255), 1);
-			Point p = cstDetector.detect(eyeRoi);
+			Point p = tDetector.detect(eyeRoi);
 		}
 	}
 }

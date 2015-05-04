@@ -3,7 +3,7 @@
 CustomEyeCenterDetector::CustomEyeCenterDetector()
 {
 	namedWindow("Debug1", 0);
-	//namedWindow("Debug2", 0);
+	namedWindow("Debug2", 0);
 	this->kernel = getStructuringElement(CV_SHAPE_ELLIPSE, Size(5, 5));
 
 	this->thresh = 220;
