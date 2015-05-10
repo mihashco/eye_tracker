@@ -1,7 +1,7 @@
 #ifndef __LAPLACE_DETECTOR_H__
 #define __LAPLACE_DETECTOR_H__
 
-#include "opencv2\opencv.hpp"
+#include "opencv2/opencv.hpp"
 
 using namespace cv;
 

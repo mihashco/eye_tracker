@@ -1,7 +1,7 @@
 #ifndef __HOUGH_DETECTOR_H__
 #define __HOUGH_DETECTOR_H__
 
-#include "opencv2\opencv.hpp"
+#include "opencv2/opencv.hpp"
 /*
 This class uses the hough detector method from opencv and shows a window for that algorithm
 */

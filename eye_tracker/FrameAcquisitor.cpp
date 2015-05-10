@@ -13,7 +13,7 @@ FrameAcquisitor::~FrameAcquisitor()
 
 void FrameAcquisitor::moduleInit()
 {
-	std::cout << "Moduele init! " << std::endl;
+	// std::cout << "Moduele init! " << std::endl;
 
 	if (this->source == ACQUISITION_IMAGES)
 	{
@@ -48,11 +48,12 @@ void FrameAcquisitor::moduleInit()
 		cap.open(0);
 		if (!cap.isOpened())
 		{
+			//std::cout << "Cap is opened!" << std::endl;
 			return;
 		}
 
-		cap.set(CV_CAP_PROP_FRAME_WIDTH, 1200);
-		cap.set(CV_CAP_PROP_FRAME_HEIGHT, 800);
+		//cap.set(CV_CAP_PROP_FRAME_WIDTH, 1200);
+		//cap.set(CV_CAP_PROP_FRAME_HEIGHT, 800);
 	}
 }
 
@@ -77,7 +78,7 @@ void FrameAcquisitor::moduleProcess(Mat &srcFrame, Mat &dstFrame)
 	}
 	else if (this->source == ACQUISITION_TEST_VIDEO)
 	{
-		std::cout << "Loading frame" << std::endl;
+		// std::cout << "Loading frame" << std::endl;
 		cap >> srcFrame;
 	}
 }

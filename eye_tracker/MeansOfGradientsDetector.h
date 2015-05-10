@@ -1,7 +1,7 @@
 #ifndef __MEANS_OF_GRADIENTS_DETECTOR_H__
 #define __MEANS_OF_GRADIENTS_DETECTOR_H__
 
-#include "opencv2\opencv.hpp"
+#include "opencv2/opencv.hpp"
 
 using namespace cv;
 

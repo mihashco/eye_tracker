@@ -1,7 +1,7 @@
 #ifndef __CUSTOM_EYE_CENTER_DETECTOR__
 #define __CUSTOM_EYE_CENTER_DETECTOR__
 
-#include "opencv2\opencv.hpp"
+#include "opencv2/opencv.hpp"
 
 using namespace cv;
 

@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 
-#include "opencv2\opencv.hpp"
+#include "opencv2/opencv.hpp"
 #include "AppModule.h"
 
 enum AcqusitionSource{
@@ -11,13 +11,14 @@ enum AcqusitionSource{
 };
 
 using namespace cv;
+using namespace std;
 
 class FrameAcquisitor : public AppModule
 {
 private:
 	VideoCapture cap;
 	AcqusitionSource source;
-	Vector<String> imgPaths;
+	vector<string> imgPaths;
 public:
 	FrameAcquisitor();
 	~FrameAcquisitor();

@@ -1,4 +1,7 @@
 #include "HoughDetector.h"
+#include <vector>
+
+using namespace std;
 
 HoughDetector::HoughDetector()
 {

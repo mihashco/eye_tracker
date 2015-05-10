@@ -1,4 +1,4 @@
-#include "opencv2\opencv.hpp"
+#include "opencv2/opencv.hpp"
 #include "AppModule.h"
 
 #include "HoughDetector.h"
@@ -7,6 +7,8 @@
 #include "LaplaceDetector.h"
 #include "ThresholdDetector.h"
 #include "Timer.h"
+
+#include "Calibrator.h"
 
 using namespace cv;
 
@@ -28,8 +30,9 @@ private:
 	ThresholdDetector thresholdDetector;
 
 	bool testMode;
-
 	Timer benchmark;
+
+	Calibrator cal;
 	
 public:
 	FrameDetector();

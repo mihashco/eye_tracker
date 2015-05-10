@@ -1,6 +1,8 @@
 #include <stdio.h>
 
 #include "EyeTracker.h"
+
+//Benchmark module
 #include "Timer.h"
 
 EyeTracker::EyeTracker()
@@ -49,15 +51,15 @@ void EyeTracker::startApplicationLoop()
 		{
 			modules[j]->moduleProcess(srcFrame, dstFrame);
 		}
-
-		if (!srcFrame.empty())
+		
+		/*if (!srcFrame.empty())
 		{
 			imshow("srcFrame", srcFrame);
-		}
-		if (!dstFrame.empty())
+		}*/
+		/*if (!dstFrame.empty())
 		{
 			imshow("dstFrame", dstFrame);
-		}
+		}*/
 
 		if (waitKey(1) == 30)
 		{

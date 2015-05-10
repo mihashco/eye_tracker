@@ -1,4 +1,7 @@
 #include "ThresholdDetector.h"
+#include <vector>
+
+using namespace std;
 
 ThresholdDetector::ThresholdDetector()
 {
@@ -20,7 +23,7 @@ Point ThresholdDetector::detect(Mat &imgSrc)
 	threshold(dst, dst, this->thresh, 255, THRESH_BINARY);
 	erode(dst, dst, this->kernel);
 
-	vector<KeyPoint> keypoints;
+	vector<KeyPoint > keypoints;
 	this->blobDetector.detect(dst, keypoints);
 
 	//drawKeypoints(imgSrc, keypoints);

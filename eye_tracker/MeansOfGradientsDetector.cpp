@@ -132,7 +132,7 @@ Point MeansOfGradientsDetector::detect(Mat &img)
 	outSum.convertTo(out, CV_32F, 1.0 / gradients);
 	minMaxLoc(out, NULL, &maxVal, NULL, &maxP);
 
-	std::cout << maxP.x << " " << maxP.y << std::endl;
+	// std::cout << maxP.x << " " << maxP.y << std::endl;
 	circle(img, maxP, 5, Scalar(255, 255, 255));
 
 	imshow("Debug1", img);

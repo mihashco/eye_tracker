@@ -12,7 +12,7 @@ CustomEyeCenterDetector::CustomEyeCenterDetector()
 	createTrackbar("binLevelLow", "Debug1", &this->thresh, 255, NULL, NULL);
 	createTrackbar("binLevelHigh", "Debug1", &this->threshMaxValue, 255, NULL, NULL);
 
-	fdetector = FeatureDetector::create("MSER");
+	//fdetector = FeatureDetector::create("MSER");
 }
 
 CustomEyeCenterDetector::~CustomEyeCenterDetector()
