@@ -3,12 +3,12 @@
 HoughDetector::HoughDetector()
 {
 	this->method = CV_HOUGH_GRADIENT;
-	this->dp = 1;
-	this->minDist = 0;
-	this->param1 = 0;
-	this->param2 = 0;
-	this->minRadious = 0;
-	this->maxRadious = 0;
+	this->dp = 3;
+	this->minDist = 150;
+	this->param1 = 50;
+	this->param2 = 110;
+	this->minRadious = 40;
+	this->maxRadious = 45;
 }
 
 HoughDetector::~HoughDetector()
@@ -28,7 +28,7 @@ void HoughDetector::showSettingsWin(void)
 	createTrackbar("maxRadious", "HoughDetectorSettingsWin", &this->maxRadious, 300);
 }
 
-vector<Point> HoughDetector::detect(Mat &img)
+Point HoughDetector::detect(Mat &img)
 {
 	vector<Vec3f> circles;
 	vector<Point> retVal;
@@ -37,7 +37,6 @@ vector<Point> HoughDetector::detect(Mat &img)
 
 	GaussianBlur(img, img, Size(3, 3), 2, 2);
 	equalizeHist(img, img);
-
 
 	HoughCircles(img, circles, CV_HOUGH_GRADIENT, this->dp+1, this->minDist+1, this->param1+1, this->param2+1, this->minRadious+1, this->maxRadious+1);
 
@@ -56,7 +55,10 @@ vector<Point> HoughDetector::detect(Mat &img)
 		}
 	}
 
-	imshow("HoughDetectorSettingsWin", img);
+	imshow("Debug1", img);
 
-	return retVal;
+	if (retVal.size() >= 1)
+		return retVal[0];
+	else
+		return Point(-1, -1);
 }

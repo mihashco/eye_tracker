@@ -18,11 +18,7 @@ Point LaplaceDetector::detect(Mat &imgSrc)
 	Mat dst = imgSrc.clone();
 	dst = ~dst;
 
-	/*dilate(dst, dst, this->erodeKernel);
-	dilate(dst, dst, this->erodeKernel);
-	dilate(dst, dst, this->erodeKernel);*/
-
-	Laplacian(dst, dst, imgSrc.depth(), 25, 7.0, 2.0);
+	Laplacian(dst, dst, imgSrc.depth(), 15, 7.0, 2.0);
 
 	imshow("Debug1", dst);
 	imshow("Debug2", imgSrc);

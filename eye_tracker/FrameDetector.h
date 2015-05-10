@@ -20,14 +20,12 @@ private:
 	vector<Rect> eyes;
 
 	Mat faceRoi;
-	Mat eye1Roi;
-	Mat eye2Roi;
 
-	HoughDetector houghEyeCenterDetector;
-	MeansOfGradientsDetector meansOfGradientsDetector;
-	CustomEyeCenterDetector cstDetector;
-	LaplaceDetector lDetector;
-	ThresholdDetector tDetector;
+	HoughDetector houghDetector;
+	MeansOfGradientsDetector mGradientsDetector;
+	CustomEyeCenterDetector customDetector;
+	LaplaceDetector laplaceDetector;
+	ThresholdDetector thresholdDetector;
 
 	bool testMode;
 

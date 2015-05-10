@@ -14,6 +14,7 @@ public:
 	~ThresholdDetector();
 
 	Point detect(Mat &imgSrc);
+	SimpleBlobDetector blobDetector;
 };
 
 

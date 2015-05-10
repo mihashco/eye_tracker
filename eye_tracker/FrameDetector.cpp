@@ -16,7 +16,7 @@ void FrameDetector::moduleInit()
 	eyeCalssifier.load("A:\\Dev\\Opencv\\opencv\\sources\\data\\haarcascades\\haarcascade_eye_tree_eyeglasses.xml");
 	faceClassifier.load("A:\\Dev\\Opencv\\opencv\\sources\\data\\haarcascades\\haarcascade_frontalface_default.xml");
 
-	//this->houghEyeCenterDetector.showSettingsWin();
+	this->houghDetector.showSettingsWin();
 }
 
 void FrameDetector::moduleDeinit()
@@ -26,17 +26,6 @@ void FrameDetector::moduleDeinit()
 
 void FrameDetector::moduleProcess(Mat &srcFrame, Mat &dstFrame)
 {
-
-//	this->benchmark.begin();
-
-	//if (this->testMode)
-	//{
-	//	Point p = this->meansOfGradientsDetector.detect(srcFrame);
-	//	cout << "Point X : " << p.x  << "Point y :" << p.y << std::endl;
-	//	//this->benchmark.end();
-	//	return;
-	//}
-
 	faceClassifier.detectMultiScale(srcFrame, faces, 1.8, 3, 0 | CASCADE_SCALE_IMAGE, Size(30, 30));
 	dstFrame = srcFrame.clone();
 
@@ -53,7 +42,7 @@ void FrameDetector::moduleProcess(Mat &srcFrame, Mat &dstFrame)
 			Mat eyeRoi = faceRoi(eyes[j]);
 			rectangle(dstFrame, Rect(faces[i].x + eyes[j].x, faces[i].y + eyes[j].y, eyes[j].width, 
 				eyes[j].height), Scalar(255, 255, 255), 1);
-			Point p = tDetector.detect(eyeRoi);
+			Point p = this->houghDetector.detect(eyeRoi);
 		}
 	}
 }

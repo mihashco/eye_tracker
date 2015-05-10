@@ -4,6 +4,7 @@ MeansOfGradientsDetector::MeansOfGradientsDetector()
 {
 	this->weightDiv = 50.0;
 	this->weightEnabled = true;
+
 }
 
 MeansOfGradientsDetector::~MeansOfGradientsDetector()
@@ -13,7 +14,6 @@ MeansOfGradientsDetector::~MeansOfGradientsDetector()
 
 void MeansOfGradientsDetector::showSettingsWin(void)
 {
-	namedWindow("MeansOfGradientsSettingsWin", 1);
 //	createTrackbar("Method", "HoughDetectorSettingsWin", &this->weightDiv, NULL, NULL);
 }
 
@@ -63,6 +63,7 @@ void MeansOfGradientsDetector::testCenter(int x, int y, Mat &img, double gX, dou
 
 Point MeansOfGradientsDetector::detect(Mat &img)
 {
+	resize(img, img, Size(img.size().width/2, img.size().height));
 	Mat gradX, gradY;
 	Mat grad, magnitudes, angles;
 	Mat out, weight;
@@ -106,16 +107,7 @@ Point MeansOfGradientsDetector::detect(Mat &img)
 
 	//blur source data
 	GaussianBlur(img, weight, Size(3, 3), 0, 0);
-
-	//invert image -> opencv function can be used for that operation
-	for (int i = 0; i < weight.rows; ++i)
-	{
-		uchar *row = weight.ptr<uchar>(i);
-		for (int j = 0; j < weight.cols; j++)
-		{
-			row[j] = (255 - row[j]);
-		}
-	}
+	weight = ~weight;
 
 	for (int i = 0; i < weight.rows; ++i)
 	{
@@ -139,5 +131,11 @@ Point MeansOfGradientsDetector::detect(Mat &img)
 	gradients = weight.rows * weight.cols;
 	outSum.convertTo(out, CV_32F, 1.0 / gradients);
 	minMaxLoc(out, NULL, &maxVal, NULL, &maxP);
+
+	std::cout << maxP.x << " " << maxP.y << std::endl;
+	circle(img, maxP, 5, Scalar(255, 255, 255));
+
+	imshow("Debug1", img);
+
 	return maxP;
 }
