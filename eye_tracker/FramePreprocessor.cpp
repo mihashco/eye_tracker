@@ -1,5 +1,5 @@
 #include "FramePreprocessor.h"
-
+#include "ApplicationState.h"
 
 FramePreprocessor::FramePreprocessor()
 {
@@ -12,7 +12,7 @@ FramePreprocessor::~FramePreprocessor()
 
 }
 
-void FramePreprocessor::moduleInit()
+void FramePreprocessor::moduleInit(ApplicationState &appState)
 {
 	//
 }
@@ -22,13 +22,20 @@ void FramePreprocessor::moduleDeinit()
 	//
 }
 
-void FramePreprocessor::moduleProcess(Mat &srcFrame, Mat &dstFrame)
+bool FramePreprocessor::moduleProcess(ApplicationState &appState)
 {
-	if (srcFrame.empty()) return;
+	if (appState.frameSrc.empty())
+		return false;
 
-	//Stabilize face detector.
-	GaussianBlur(srcFrame, srcFrame, Size(5, 5), 3, 3);
+	cvtColor(appState.frameSrc, appState.frameGray, COLOR_BGR2GRAY);
+	
 
-	cvtColor(srcFrame, dstFrame, COLOR_BGR2GRAY);
-	srcFrame = dstFrame.clone();
+
+	
+	GaussianBlur(appState.frameGray, appState.frameGray, Size(5, 5), 3, 3);
+	GaussianBlur(appState.frameGray, appState.frameGray, Size(5, 5), 3, 3);
+	GaussianBlur(appState.frameGray, appState.frameGray, Size(5, 5), 3, 3);
+	//equalizeHist(appState.frameGray, appState.frameGray);
+
+	return true;
 }

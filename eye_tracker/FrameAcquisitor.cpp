@@ -3,19 +3,15 @@
 
 FrameAcquisitor::FrameAcquisitor()
 {
-	//this is the default configuration
-	this->source = ACQUISITION_VIDEO_CAP;
 }
 
 FrameAcquisitor::~FrameAcquisitor()
 {
 }
 
-void FrameAcquisitor::moduleInit()
+void FrameAcquisitor::moduleInit(ApplicationState &appState)
 {
-	std::cout << "Moduele init! " << std::endl;
-
-	if (this->source == ACQUISITION_IMAGES)
+	if (appState.acqSrc == ACQUISITION_IMAGES)
 	{
 		imgPaths.push_back("E:\\EyeData\\img\\eye1.jpg");
 		imgPaths.push_back("E:\\EyeData\\img\\eye2.jpg");
@@ -34,7 +30,7 @@ void FrameAcquisitor::moduleInit()
 		imgPaths.push_back("E:\\EyeData\\img\\eye15.jpg");
 		imgPaths.push_back("E:\\EyeData\\img\\eye16.jpg");
 	}
-	else if (this->source == ACQUISITION_TEST_VIDEO)
+	else if (appState.acqSrc == ACQUISITION_TEST_VIDEO)
 	{
 		cap.open("C:\\Users\\Michal\\Desktop\\test_data.mp4");
 		if (!cap.isOpened())
@@ -43,16 +39,16 @@ void FrameAcquisitor::moduleInit()
 			return;
 		}
 	}
-	else if (this->source == ACQUISITION_VIDEO_CAP)
+	else if (appState.acqSrc == ACQUISITION_VIDEO_CAP)
 	{
-		cap.open(0);
+		cap.open(appState.camID);
 		if (!cap.isOpened())
 		{
 			return;
 		}
 
-		cap.set(CV_CAP_PROP_FRAME_WIDTH, 1200);
-		cap.set(CV_CAP_PROP_FRAME_HEIGHT, 800);
+		cap.set(CV_CAP_PROP_FRAME_WIDTH, appState.frameWidth);
+		cap.set(CV_CAP_PROP_FRAME_HEIGHT, appState.frameHeight);
 	}
 }
 
@@ -61,28 +57,25 @@ void FrameAcquisitor::moduleDeinit()
 	cap.release();
 }
 
-void FrameAcquisitor::moduleProcess(Mat &srcFrame, Mat &dstFrame)
+bool FrameAcquisitor::moduleProcess(ApplicationState &appState)
 {
 	static int current_img = 0;
 
-	if (this->source == ACQUISITION_VIDEO_CAP)
+	if (appState.acqSrc == ACQUISITION_VIDEO_CAP)
 	{
-		cap >> srcFrame;
+		cap >> appState.frameSrc;
 	}
-	else if (this->source == ACQUISITION_IMAGES)
+	else if (appState.acqSrc == ACQUISITION_IMAGES)
 	{
 		if (current_img == imgPaths.size()) 
 			current_img = 0;
-		srcFrame = imread(imgPaths[current_img++], 1);
+		appState.frameSrc = imread(imgPaths[current_img++], 1);
 	}
-	else if (this->source == ACQUISITION_TEST_VIDEO)
+	else if (appState.acqSrc == ACQUISITION_TEST_VIDEO)
 	{
 		std::cout << "Loading frame" << std::endl;
-		cap >> srcFrame;
+		cap >> appState.frameSrc;
 	}
-}
 
-void FrameAcquisitor::acquistionSourceSet(AcqusitionSource src)
-{
-	this->source = src;
+	return true;
 }

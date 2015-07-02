@@ -7,29 +7,16 @@
 
 EyeTracker::EyeTracker()
 {
-	modulesCount = 3;
+	modulesCount = 4;
 
-	modules[0] = new FrameAcquisitor();
-	modules[1] = new FramePreprocessor();
-	modules[2] = new FrameDetector();
+	//TODO: Each module should have the access to the application instance class.
 
-	FrameAcquisitor *frAcquisitor = (FrameAcquisitor*) modules[0];
-	frAcquisitor->acquistionSourceSet(ACQUISITION_VIDEO_CAP);
+	modules[0] = new FrameAcquisitor(); /*Camera initialization .edc*/
+	modules[1] = new FramePreprocessor(); /*Image preprocessing and filtering for improve detection metods*/
+	modules[2] = new FaceAndEyeDetector();
 
-	FrameDetector *frDetector = (FrameDetector*)modules[2];
-	frDetector->moduleSetTestModeState(false);
-
-	//set window proprties;
-	namedWindow("dstFrame", 0);
-	namedWindow("srcFrame", 0);
-
-	moveWindow("srcFrame", 0, 0);
-	resizeWindow("srcFrame", 400, 320);
-
-	moveWindow("dstFrame", 0, 320);
-	resizeWindow("dstFrame", 400, 320);
-
-	//std::cout << "EyeTracker Constructor" << gpu::getCudaEnabledDeviceCount() << std::endl;
+	//modules[3] = new HeadPosEstimator();
+	modules[3] = new CursorController();
 }
 
 EyeTracker::~EyeTracker()
@@ -41,7 +28,7 @@ void EyeTracker::applicationModulesInit()
 {
 	for (int i = 0; i < modulesCount; i++)
 	{
-		modules[i]->moduleInit();
+		modules[i]->moduleInit(this->appState);
 	}
 }
 
@@ -61,19 +48,13 @@ void EyeTracker::startApplicationLoop()
 		int j = 0;
 		for (j = 0; j < modulesCount; j++)
 		{
-			modules[j]->moduleProcess(srcFrame, dstFrame);
+			if (!modules[j]->moduleProcess(this->appState)) {
+				std::cout << "Module [ " << j << "] failed" << std::endl;
+				break;
+			}
 		}
 
-		if (!srcFrame.empty())
-		{
-			imshow("srcFrame", srcFrame);
-		}
-		if (!dstFrame.empty())
-		{
-			imshow("dstFrame", dstFrame);
-		}
-
-		if (waitKey(5) == 30)
+		if (waitKey(1) == 30)
 		{
 			for (j = 0; j < 2; j++)
 			{

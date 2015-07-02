@@ -6,8 +6,8 @@ public:
 	FramePreprocessor();
 	~FramePreprocessor();
 
-	void moduleInit();
+	void moduleInit(ApplicationState &appState);
 	void moduleDeinit();
-	void moduleProcess(Mat &inFrame, Mat &outFrame);
+	bool moduleProcess(ApplicationState &appState);
 };
 

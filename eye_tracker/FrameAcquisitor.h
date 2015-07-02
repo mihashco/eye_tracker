@@ -4,28 +4,20 @@
 #include "opencv2\opencv.hpp"
 #include "AppModule.h"
 
-enum AcqusitionSource{
-	ACQUISITION_VIDEO_CAP = 0,
-	ACQUISITION_IMAGES,
-	ACQUISITION_TEST_VIDEO,
-};
-
 using namespace cv;
 
 class FrameAcquisitor : public AppModule
 {
 private:
 	VideoCapture cap;
-	AcqusitionSource source;
 	Vector<String> imgPaths;
 public:
 	FrameAcquisitor();
 	~FrameAcquisitor();
 
-	void moduleInit(void);
+	void moduleInit(ApplicationState &appState);
+	bool moduleProcess(ApplicationState &appState);
 	void moduleDeinit(void);
-	void moduleProcess(Mat &srcFrame, Mat &dstFrame);
 
 	void imgPathSet(String imgPath);
-	void acquistionSourceSet(AcqusitionSource src);
 };

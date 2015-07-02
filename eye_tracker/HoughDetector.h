@@ -24,7 +24,7 @@ public:
 	HoughDetector();
 	~HoughDetector();
 
-	vector<Point> detect(Mat &img);
+	Point detect(Mat &img);
 	void showSettingsWin(void);
 };
 
