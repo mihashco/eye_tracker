@@ -60,6 +60,7 @@ bool FaceAndEyeDetector::moduleProcess(ApplicationState &appState)
 	rectangle(appState.frameGray, eyeAreaRight.tl(), eyeAreaRight.br(), Scalar(255, 255, 255), 2);
 
 	appState.face = appState.frameGray(r);
+	appState.faceRect = r;
 
 	eyeLclassifier.detectMultiScale(appState.frameGray(eyeAreaLeft), eyesLeft, 1.1, 2, CASCADE_FIND_BIGGEST_OBJECT | CASCADE_SCALE_IMAGE, Size(30, 30), Size(100, 100));
 	eyeLclassifier.detectMultiScale(appState.frameGray(eyeAreaRight), eyesRight, 1.1, 2, CASCADE_FIND_BIGGEST_OBJECT | CASCADE_SCALE_IMAGE, Size(30, 30), Size(100, 100));

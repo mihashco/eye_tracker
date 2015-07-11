@@ -10,6 +10,7 @@
 #include "FaceAndEyeDetector.h"
 #include "FramePreprocessor.h"
 #include "ApplicationState.h"
+#include "HeadDetector.h"
 
 using namespace cv;
 
@@ -17,15 +18,13 @@ class EyeTracker
 {
 private:
 	ApplicationState appState;
-
 	AppModule *modules[10];
 	ushort modulesCount;
-
 public:
 	EyeTracker();
 	~EyeTracker();
 
-	void applicationModulesInit();
-	void applicationModulesDeinit();
- 	void startApplicationLoop();
+	void applicationModulesInit(void);
+	void applicationModulesDeinit(void);
+ 	void startApplicationLoop(void);
 };

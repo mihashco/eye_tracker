@@ -7,16 +7,13 @@
 
 EyeTracker::EyeTracker()
 {
-	modulesCount = 4;
+	modulesCount = 5;
 
-	//TODO: Each module should have the access to the application instance class.
-
-	modules[0] = new FrameAcquisitor(); /*Camera initialization .edc*/
+	modules[0] = new FrameAcquisitor(); /*Camera initialization .eTc*/
 	modules[1] = new FramePreprocessor(); /*Image preprocessing and filtering for improve detection metods*/
 	modules[2] = new FaceAndEyeDetector();
-
-	//modules[3] = new HeadPosEstimator();
-	modules[3] = new CursorController();
+	modules[3] = new HeadDetector();
+	modules[4] = new CursorController();
 }
 
 EyeTracker::~EyeTracker()

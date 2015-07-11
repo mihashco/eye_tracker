@@ -35,6 +35,7 @@ public:
 
 	/*FaceAndEyeDetector*/
 	Mat face; /*best face candidate*/
+	Rect faceRect;
 	Mat lEye; /*best left eye candidate*/
 	Mat rEye; /*best right eye candidate*/
 
@@ -43,6 +44,12 @@ public:
 
 	Point lEyeRelativeCenter;
 	Point rEyeRelativeCenter;
+
+	/*Head Pose estimation*/
+	Point headCenter;
+	double headYaw;
+	double headPitch;
+	double headRoll;
 
 	/*CursorController*/
 	ApplicationMode apMode;

@@ -3,6 +3,7 @@
 
 FrameAcquisitor::FrameAcquisitor()
 {
+	std::cout << "FrameAcquisitor Constructor " << std::endl;
 }
 
 FrameAcquisitor::~FrameAcquisitor()
