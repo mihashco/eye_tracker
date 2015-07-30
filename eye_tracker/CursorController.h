@@ -52,6 +52,9 @@ private:
 	std::vector<Point> sortedTy;
 	std::vector<Point> sortedBy;
 
+	/*Head calibration data*/
+	std::vector<Point> headCentersVector;
+
 	double mCenterX;
 	double mCenterY;
 	double mLeftX;
@@ -73,6 +76,7 @@ public:
 	void moduleInit(ApplicationState &appState);
 	bool moduleProcess(ApplicationState &appState);
 	void moduleDeinit(void);
+	bool getCalibrationStatus(void);
 };
 
 

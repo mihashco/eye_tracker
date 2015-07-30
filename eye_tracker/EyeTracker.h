@@ -7,7 +7,7 @@
 #include "opencv2\opencv.hpp"
 
 #include "FrameAcquisitor.h"
-#include "FaceAndEyeDetector.h"
+#include "FaceDetector.h"
 #include "FramePreprocessor.h"
 #include "ApplicationState.h"
 #include "HeadDetector.h"
@@ -20,11 +20,16 @@ private:
 	ApplicationState appState;
 	AppModule *modules[10];
 	ushort modulesCount;
+
+	int winId;
+
 public:
-	EyeTracker();
+	EyeTracker(int argc, char **argv);
 	~EyeTracker();
 
 	void applicationModulesInit(void);
 	void applicationModulesDeinit(void);
  	void startApplicationLoop(void);
+
+	void draw();
 };

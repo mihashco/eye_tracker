@@ -3,15 +3,13 @@
 #include "EyeTracker.h"
 #include "Timer.h"
 
-#include "opencv2\gpu\gpu.hpp"
-
-EyeTracker::EyeTracker()
+EyeTracker::EyeTracker(int argc, char **argv)
 {
 	modulesCount = 5;
 
 	modules[0] = new FrameAcquisitor(); /*Camera initialization .eTc*/
 	modules[1] = new FramePreprocessor(); /*Image preprocessing and filtering for improve detection metods*/
-	modules[2] = new FaceAndEyeDetector();
+	modules[2] = new FaceDetector();
 	modules[3] = new HeadDetector();
 	modules[4] = new CursorController();
 }
@@ -40,9 +38,10 @@ void EyeTracker::applicationModulesDeinit()
 
 void EyeTracker::startApplicationLoop()
 {
-	for (;;)
-	{
-		int j = 0;
+	int j = 0;
+
+	for (;;) {
+
 		for (j = 0; j < modulesCount; j++)
 		{
 			if (!modules[j]->moduleProcess(this->appState)) {
@@ -51,7 +50,7 @@ void EyeTracker::startApplicationLoop()
 			}
 		}
 
-		if (waitKey(1) == 30)
+		if (waitKey(5) == 30)
 		{
 			for (j = 0; j < 2; j++)
 			{

@@ -13,13 +13,19 @@
 
 using namespace cv;
 
-class FaceAndEyeDetector : public AppModule
+class FaceDetector : public AppModule
 {
 private:
 	CascadeClassifier faceClassifier;
 	CascadeClassifier eyeLclassifier;
 	CascadeClassifier eyeRclassifier;
-
+	CascadeClassifier noseClassifier;
+	CascadeClassifier mouthClassifier;
+	CascadeClassifier eye2Lclassifier;
+	CascadeClassifier eye2Rclassifier;
+	
+	vector<Rect> nose;
+	vector<Rect> mouth;
 	vector<Rect> faces;
 	vector<Rect> eyesLeft;
 	vector<Rect> eyesRight;
@@ -28,15 +34,12 @@ private:
 	MeansOfGradientsDetector meansOfGradientsDetector;
 	LaplaceDetector laplaceDetector;
 	MinDetector minDetector;
-
 	CursorController crsController;
 
 	Timer benchmark;
-	Mat lEye;
-	Mat rEye;
 public:
-	FaceAndEyeDetector();
-	~FaceAndEyeDetector();
+	FaceDetector();
+	~FaceDetector();
 
 	void moduleInit(ApplicationState &appState);
 	bool moduleProcess(ApplicationState &appState);

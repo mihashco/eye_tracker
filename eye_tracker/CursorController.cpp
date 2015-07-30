@@ -9,8 +9,6 @@ bool _internal_sort_points(Point p1, Point p2)
 		return false;
 }
 
-
-
 CursorController::CursorController() 
 {
 	namedWindow("Canvas", 0);
@@ -164,11 +162,19 @@ bool CursorController::collectCalibrationData(ApplicationState &appState)
 	Point eyeCenter = appState.rEyeCenter;
 	canvas = Mat::zeros(Size(scrWidth, scrHeight), CV_8U);
 
+	int headDx = abs(appState.headAproxCenter.x - appState.headCenter.x);
+	int headDy = abs(appState.headAproxCenter.y - appState.headCenter.y);
+
+	if (headDx < 3 && headDy < 3) {
+		this->headCentersVector.push_back(appState.headAproxCenter);
+	}
+
 	while (cPoints.size() < dCounter * 2) {
 		circle(canvas, Point(canvas.cols / 2, canvas.rows / 2), 20, Scalar(255, 255, 255), 2);
 		cPoints.push_back(eyeCenter);
 		centerX.push_back(appState.rEyeRelativeCenter.x);
 		centerY.push_back(appState.rEyeRelativeCenter.y);
+
 		imshow("Canvas", canvas);
 		return false;
 	}
@@ -227,7 +233,7 @@ void CursorController::computeCallibrationData(ApplicationState &appState)
 		this->cX += cPoints[i].x;
 		this->cY += cPoints[i].y;
 
-		std::cout << cX << " " << cY << std::endl;
+		//std::cout << cX << " " << cY << std::endl;
 
 		this->lX += ltPoints[i].x;
 		this->lX += lbPoints[i].x;
@@ -309,7 +315,7 @@ void CursorController::computeCallibrationData(ApplicationState &appState)
 			sortedCy.push_back(Point(zCy, c));
 		}
 	}
-	
+	 
 	std::sort(sortedCx.begin(), sortedCx.end(), _internal_sort_points);
 	std::sort(sortedLx.begin(), sortedLx.end(), _internal_sort_points);
 	std::sort(sortedRx.begin(), sortedRx.end(), _internal_sort_points);
@@ -319,10 +325,6 @@ void CursorController::computeCallibrationData(ApplicationState &appState)
 
 	int valL = 0, sumL = 0, valR = 0, sumR = 0, valC = 0, sumC = 0, valTy = 0, sumTy = 0, valCy = 0, sumCy = 0;
 
-	//mean left value
-
-	//TODO: add sanity check
-	//TODO: this loops refactored!
 	for (int i = 0; i < 4; i++) {
 		valL += sortedLx[i].x * sortedLx[i].y;
 		sumL += sortedLx[i].y;
@@ -352,4 +354,27 @@ void CursorController::computeCallibrationData(ApplicationState &appState)
 	this->mRightX = valR / sumR;
 	this->mCenterX = valC / sumC;
 	this->mCenterY = valCy / sumCy;
+
+	int mx = 0, my = 0;
+
+	for (int i = 0; i < this->headCentersVector.size(); i++) {
+		mx += this->headCentersVector[i].x;
+		my += this->headCentersVector[i].y;
+	}
+
+	if (this->headCentersVector.size() > 0)
+	{
+		mx = mx / this->headCentersVector.size();
+		my = my / this->headCentersVector.size();
+	}
+
+	appState.headForScreenCenter = Point(mx, my);
+	appState.oxForScreenCenter = appState.headAproxCenter.y - appState.mouthAproxCenter.y;
+	appState.oyForScreenCenter = appState.headAproxCenter.x - appState.mouthAproxCenter.x;
+}
+
+
+bool CursorController::getCalibrationStatus(void) 
+{
+	return isCalibrated;
 }

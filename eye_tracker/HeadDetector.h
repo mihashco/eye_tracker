@@ -6,6 +6,17 @@
 class HeadDetector : public AppModule
 {
 private:
+	double oxAngle;
+	double oyAngle;
+	double ozAngle;
+
+	KalmanFilter *headCenterKF;
+	KalmanFilter *noseCenterKF;
+	KalmanFilter *mouthCenterKF;
+	KalmanFilter *eyeCenterKF;
+
+	Mat rotation;
+
 public:
 	HeadDetector();
 	~HeadDetector();
@@ -13,6 +24,8 @@ public:
 	void moduleInit(ApplicationState &appState);
 	bool moduleProcess(ApplicationState &appState);
 	void moduleDeinit(void);
+	void kalmanFilterInit(KalmanFilter *kf);
+	void kalmanFilterGetAproximatedPoint(KalmanFilter *kf, Point refPoint, Point &outPoint);
 };
 
 #endif

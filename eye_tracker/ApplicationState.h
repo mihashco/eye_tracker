@@ -26,30 +26,57 @@ public:
 	Mat frameDst;
 	Mat frameGray;
 
-	Mat frameR;
-	Mat frameG;
-	Mat frameB;
-
 	int frameWidth;
 	int frameHeight;
 
-	/*FaceAndEyeDetector*/
+	/*FaceFeatures*/
 	Mat face; /*best face candidate*/
-	Rect faceRect;
 	Mat lEye; /*best left eye candidate*/
 	Mat rEye; /*best right eye candidate*/
 
+	/*This variables are used for calculate head parameters*/
+	Rect faceRect;
+	Rect noseRect;
+	Rect mouthRect;
+
+	/*PUPIL CENTER*/
 	Point lEyeCenter;
 	Point rEyeCenter;
-
 	Point lEyeRelativeCenter;
 	Point rEyeRelativeCenter;
+	
+	Point eyeAproxCenter;
+
+	/*Nose*/
+	Point noseCenter;
+	Point noseAproxCenter;
+
+	/*Mouth points*/
+	Point lmouthCorner;
+	Point rmouthCorner;
+	Point mouthCenter;
+	Point mouthAproxCenter;
+
+	/*Eyes position*/
+	Point leftEyeLcorner;
+	Point leftEyeRcorner;
+	Point rightEyeLcorner;
+	Point rightEyeRcorner;
 
 	/*Head Pose estimation*/
 	Point headCenter;
-	double headYaw;
-	double headPitch;
-	double headRoll;
+	Point headAproxCenter; /*Estimated by Kalman Filter*/
+	
+	int headOX;
+	int headOY;
+	int headOZ;
+
+	/*DATA AFTER CALIBRATION*/
+	Point headForScreenCenter;
+	Point eyeForScreenCenter;
+
+	int oyForScreenCenter;
+	int oxForScreenCenter;
 
 	/*CursorController*/
 	ApplicationMode apMode;
