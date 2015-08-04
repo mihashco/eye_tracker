@@ -60,10 +60,18 @@ public:
 	Point rEyeCenterPoint;
 	Point lEyeRelativeCenterPoint;
 	Point rEyeRelativeCenterPoint;
-	
 	Point eyeAproxCenterPoint;
-	Point eyeMeanCenterPoint;
+
 	Point eyeForScreenCenterPoint;
+
+	/*FOR GAZE POINTER CALCULATION*/
+	double eyeDeltaX;
+	double eyeDeltaY;
+
+	/*FROM CALIBRATOR*/
+	Point eyeMeanCenterPoint;
+	double leftFactor;
+	double rightFactor;
 
 	/*Nose*/
 	Point noseCenterPoint;
@@ -77,16 +85,17 @@ public:
 
 	/*Head Pose estimation*/
 	Point headCenterPoint;
-	Point headAproxCenterPoint; /*Estimated by Kalman Filter*/
-	Point headForScreenCenterPoint;
-	int oyForScreenCenter;
-	int oxForScreenCenter;
+	Point headAproxCenterPoint;
+
+	double initHeadOX;
+	double initHeadOY;
 	int headOX;
 	int headOY;
+	double deltaHeadOX;
+	double deltaHeadOY;
 
 	/*OUTPUT*/
 	Point gazePoint;
-	Point aproxGazePoint;
 	Mat heatMapMat;
 
 	ApplicationState();

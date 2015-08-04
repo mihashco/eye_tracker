@@ -11,7 +11,7 @@ EyeTracker::EyeTracker(int argc, char **argv)
 	modules[1] = new FramePreprocessor(); /*Image preprocessing and filtering for improve detection metods*/
 	modules[2] = new FaceDetector();
 	modules[3] = new HeadDetector();
-	modules[4] = new CursorController();
+	modules[4] = new Calibrator();
 }
 
 EyeTracker::~EyeTracker()

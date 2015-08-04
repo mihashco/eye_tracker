@@ -7,7 +7,8 @@
 #include "CustomEyeCenterDetector.h"
 #include "LaplaceDetector.h"
 #include "MinDetector.h"
-#include "CursorController.h"
+#include "Calibrator.h"
+#include "Kalman.h"
 
 #include "Timer.h"
 
@@ -34,9 +35,14 @@ private:
 	MeansOfGradientsDetector meansOfGradientsDetector;
 	LaplaceDetector laplaceDetector;
 	MinDetector minDetector;
-	CursorController crsController;
+	Calibrator calibrator;
 
 	Timer benchmark;
+
+	Kalman kFilterLeye;
+	Kalman kFilterReye;
+	Kalman kFilterNose;
+	Kalman KFilterMouth;
 public:
 	FaceDetector();
 	~FaceDetector();

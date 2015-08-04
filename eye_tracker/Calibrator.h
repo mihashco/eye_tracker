@@ -1,5 +1,5 @@
-#ifndef __CURSOR_CONTROLLER_H__
-#define __CURSOR_CONTROLLER_H__
+#ifndef __CALIBRATOR_H__
+#define __CALIBRATOR_H__
 
 #include "opencv2\opencv.hpp"
 
@@ -10,7 +10,7 @@
 
 using namespace cv;
 
-class CursorController : public AppModule {
+class Calibrator : public AppModule {
 private:
 	Mat canvas;
 	Point center;
@@ -70,8 +70,8 @@ private:
 	bool processMode6Regions(ApplicationState &appState);
 
 public:
-	CursorController();
-	~CursorController();
+	Calibrator();
+	~Calibrator();
 
 	void moduleInit(ApplicationState &appState);
 	bool moduleProcess(ApplicationState &appState);
