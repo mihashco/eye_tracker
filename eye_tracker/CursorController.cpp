@@ -31,7 +31,7 @@ void CursorController::moduleInit(ApplicationState &appState)
 
 bool CursorController::moduleProcess(ApplicationState &appState)
 {
-	Point eyeCenter = appState.lEyeCenter;
+	Point eyeCenter = appState.lEyeCenterPoint;
 
 	if (isCalibrationDataCollected == false) {
 		
@@ -44,6 +44,7 @@ bool CursorController::moduleProcess(ApplicationState &appState)
 	if (isCalibrated == false) {
 		computeCallibrationData(appState);
 		isCalibrated = true;
+		appState.isCalibrated = true;
 	} else {
 		if (appState.apMode == APPLICATION_MODE_6_REGIONS) {
 			processMode6Regions(appState);
@@ -64,7 +65,7 @@ void CursorController::moduleDeinit(void)
 
 bool CursorController::processModeGazeTracker(ApplicationState &appState)
 {
-	Point eyeCenter = appState.lEyeRelativeCenter;
+	Point eyeCenter = appState.lEyeRelativeCenterPoint;
 	Point cursor;
 
 	canvas = Mat::zeros(Size(scrWidth, scrHeight), CV_8U);
@@ -120,12 +121,10 @@ bool CursorController::processModeGazeTracker(ApplicationState &appState)
 
 bool CursorController::processMode6Regions(ApplicationState &appState)
 {
-	Point eyeCenter = appState.rEyeRelativeCenter;
+	Point eyeCenter = appState.rEyeRelativeCenterPoint;
 
 	canvas = Mat::zeros(Size(scrWidth, scrHeight), CV_8U);
 	
-	std::cout << "x: " << eyeCenter.x << "y: " << eyeCenter.y << std::endl;
-
 	int d = 9;
 
 	if (eyeCenter.x < mCenterX - d) {
@@ -159,21 +158,21 @@ bool CursorController::processMode6Regions(ApplicationState &appState)
 
 bool CursorController::collectCalibrationData(ApplicationState &appState)
 {
-	Point eyeCenter = appState.rEyeCenter;
+	Point eyeCenter = appState.rEyeCenterPoint;
 	canvas = Mat::zeros(Size(scrWidth, scrHeight), CV_8U);
 
-	int headDx = abs(appState.headAproxCenter.x - appState.headCenter.x);
-	int headDy = abs(appState.headAproxCenter.y - appState.headCenter.y);
+	int headDx = abs(appState.headAproxCenterPoint.x - appState.headCenterPoint.x);
+	int headDy = abs(appState.headAproxCenterPoint.y - appState.headCenterPoint.y);
 
 	if (headDx < 3 && headDy < 3) {
-		this->headCentersVector.push_back(appState.headAproxCenter);
+		this->headCentersVector.push_back(appState.headAproxCenterPoint);
 	}
 
 	while (cPoints.size() < dCounter * 2) {
 		circle(canvas, Point(canvas.cols / 2, canvas.rows / 2), 20, Scalar(255, 255, 255), 2);
-		cPoints.push_back(eyeCenter);
-		centerX.push_back(appState.rEyeRelativeCenter.x);
-		centerY.push_back(appState.rEyeRelativeCenter.y);
+		cPoints.push_back(appState.rEyeCenterPoint);
+		centerX.push_back(appState.rEyeRelativeCenterPoint.x);
+		centerY.push_back(appState.rEyeRelativeCenterPoint.y);
 
 		imshow("Canvas", canvas);
 		return false;
@@ -184,8 +183,8 @@ bool CursorController::collectCalibrationData(ApplicationState &appState)
 		circle(canvas, Point(canvas.cols / 4 - 50, canvas.rows / 4 - 50), 20, Scalar(255, 255, 255), 2);
 		ltPoints.push_back(eyeCenter);
 		
-		leftX.push_back(appState.rEyeRelativeCenter.x);
-		topY.push_back(appState.rEyeRelativeCenter.y);
+		leftX.push_back(appState.rEyeRelativeCenterPoint.x);
+		topY.push_back(appState.rEyeRelativeCenterPoint.y);
 		
 		imshow("Canvas", canvas);
 		return false;
@@ -195,8 +194,8 @@ bool CursorController::collectCalibrationData(ApplicationState &appState)
 		circle(canvas, Point(canvas.cols / 4 - 50, canvas.rows / 4 * 3 + 50), 20, Scalar(255, 255, 255), 2);
 		lbPoints.push_back(eyeCenter);
 		
-		leftX.push_back(appState.rEyeRelativeCenter.x);
-		bottomY.push_back(appState.rEyeRelativeCenter.y);
+		leftX.push_back(appState.rEyeRelativeCenterPoint.x);
+		bottomY.push_back(appState.rEyeRelativeCenterPoint.y);
 		
 		imshow("Canvas", canvas);
 		return false;
@@ -206,8 +205,8 @@ bool CursorController::collectCalibrationData(ApplicationState &appState)
 		circle(canvas, Point(canvas.cols / 4 * 3 + 50, canvas.rows / 4 - 50), 20, Scalar(255, 255, 255), 2);
 		rtPoints.push_back(eyeCenter);
 		
-		rightX.push_back(appState.rEyeRelativeCenter.x);
-		topY.push_back(appState.rEyeRelativeCenter.y);
+		rightX.push_back(appState.rEyeRelativeCenterPoint.x);
+		topY.push_back(appState.rEyeRelativeCenterPoint.y);
 		
 		imshow("Canvas", canvas);
 		return false;
@@ -217,8 +216,8 @@ bool CursorController::collectCalibrationData(ApplicationState &appState)
 		circle(canvas, Point(canvas.cols / 4 * 3 + 50, canvas.rows / 4 * 3 + 50), 20, Scalar(255, 255, 255), 2);
 		rbPoints.push_back(eyeCenter);
 		
-		rightX.push_back(appState.rEyeRelativeCenter.x);
-		bottomY.push_back(appState.rEyeRelativeCenter.y);
+		rightX.push_back(appState.rEyeRelativeCenterPoint.x);
+		bottomY.push_back(appState.rEyeRelativeCenterPoint.y);
 		
 		imshow("Canvas", canvas);
 		return false;
@@ -232,8 +231,6 @@ void CursorController::computeCallibrationData(ApplicationState &appState)
 	for (int i = 0; i < dCounter; i++) {
 		this->cX += cPoints[i].x;
 		this->cY += cPoints[i].y;
-
-		//std::cout << cX << " " << cY << std::endl;
 
 		this->lX += ltPoints[i].x;
 		this->lX += lbPoints[i].x;
@@ -356,6 +353,7 @@ void CursorController::computeCallibrationData(ApplicationState &appState)
 	this->mCenterY = valCy / sumCy;
 
 	int mx = 0, my = 0;
+	int cx = 0, cy = 0;
 
 	for (int i = 0; i < this->headCentersVector.size(); i++) {
 		mx += this->headCentersVector[i].x;
@@ -368,9 +366,27 @@ void CursorController::computeCallibrationData(ApplicationState &appState)
 		my = my / this->headCentersVector.size();
 	}
 
-	appState.headForScreenCenter = Point(mx, my);
-	appState.oxForScreenCenter = appState.headAproxCenter.y - appState.mouthAproxCenter.y;
-	appState.oyForScreenCenter = appState.headAproxCenter.x - appState.mouthAproxCenter.x;
+	for (int i = 0; i < this->cPoints.size(); i++) {
+		cx += this->cPoints[i].x;
+		cy += this->cPoints[i].y;
+	}
+
+	if (this->cPoints.size() > 0) {
+		cx = cx / this->cPoints.size();
+		cy = cy / this->cPoints.size();
+	}
+
+	appState.eyeMeanCenterPoint = Point(cx, cy);
+	appState.headForScreenCenterPoint = Point(mx, my);
+
+	if (appState.headAngleRef == HEAD_MOUTH) {
+		appState.oxForScreenCenter = appState.headAproxCenterPoint.y - appState.mouthAproxCenterPoint.y;
+		appState.oyForScreenCenter = appState.headAproxCenterPoint.x - appState.mouthAproxCenterPoint.x;
+	}
+	else {
+		appState.oxForScreenCenter = appState.headAproxCenterPoint.y - appState.noseAproxCenterPoint.y;
+		appState.oyForScreenCenter = appState.headAproxCenterPoint.x - appState.noseAproxCenterPoint.x;
+	}
 }
 
 

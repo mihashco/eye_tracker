@@ -65,8 +65,6 @@ Point HoughDetector::detect(Mat &img)
 	for (int i = 0; i < retVal.size(); i++) {
 		vector<int> circleData = retVal[i];
 		Mat tmp = Mat::zeros(Size(circleData[0], circleData[1]), CV_8U);
-
-		std::cout << "size : " << tmp.size() << std::endl;
 	}
 	/*Get the rectangle from the picture*/
 
