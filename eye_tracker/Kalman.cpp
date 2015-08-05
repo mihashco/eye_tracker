@@ -8,7 +8,7 @@ Kalman::Kalman()
 	Mat_<float> measurement(2, 1);
 	measurement.setTo(Scalar(0));
 
-	kFilter->statePre.at<float>(0) = 1000;
+	kFilter->statePre.at<float>(0) = 700;
 	kFilter->statePre.at<float>(1) = 600;
 	kFilter->statePre.at<float>(2) = 0;
 	kFilter->statePre.at<float>(3) = 0;

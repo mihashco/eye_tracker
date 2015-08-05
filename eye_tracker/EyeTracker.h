@@ -11,6 +11,7 @@
 #include "FramePreprocessor.h"
 #include "ApplicationState.h"
 #include "HeadDetector.h"
+#include "GazeEstimator.h"
 
 using namespace cv;
 

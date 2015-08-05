@@ -27,13 +27,22 @@ enum UsedEye {
 	EYE_RIGHT
 };
 
+enum GazeMode {
+	GAZE_TEST = 0,
+	GAZE_HEAT_MAP,
+	GAZE_CURSOR_CONTROLLER,
+	GAZE_SIZ_REGIONS,
+	GAZE_DEBUG,
+};
+
 class ApplicationState {
 public:
 	AcqusitionSource acqSrc; /*Acqusition source*/
 	HeadAngleReference headAngleRef; /*Part of face used for head angle calculation*/
 	UsedEye usedEye; /*Eye used for gaze estimation*/
 	ApplicationMode apMode; /*Application mode*/
-	
+	GazeMode gzMode;
+
 	bool isCalibrated; /*Calibration status*/
 
 	int measureTime; /*Time of the gaze estimation*/

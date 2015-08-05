@@ -5,13 +5,14 @@
 
 EyeTracker::EyeTracker(int argc, char **argv)
 {
-	modulesCount = 5;
+	modulesCount = 6;
 
 	modules[0] = new FrameAcquisitor(); /*Camera initialization .eTc*/
 	modules[1] = new FramePreprocessor(); /*Image preprocessing and filtering for improve detection metods*/
 	modules[2] = new FaceDetector();
 	modules[3] = new HeadDetector();
 	modules[4] = new Calibrator();
+	modules[5] = new GazeEstimator();
 }
 
 EyeTracker::~EyeTracker()

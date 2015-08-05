@@ -31,13 +31,9 @@ void Calibrator::moduleInit(ApplicationState &appState)
 
 bool Calibrator::moduleProcess(ApplicationState &appState)
 {
-	Point eyeCenter = appState.lEyeCenterPoint;
-
 	if (isCalibrationDataCollected == false) {
-		
 		if (!collectCalibrationData(appState))
 			return true;
-
 		isCalibrationDataCollected = true;
 	}
 
@@ -45,13 +41,16 @@ bool Calibrator::moduleProcess(ApplicationState &appState)
 		computeCallibrationData(appState);
 		isCalibrated = true;
 		appState.isCalibrated = true;
-	} else {
-		if (appState.apMode == APPLICATION_MODE_6_REGIONS) {
+	} 
+	else {
+		/*if (appState.apMode == APPLICATION_MODE_6_REGIONS) {
 			processMode6Regions(appState);
 		}
 		else if (appState.apMode == APPLICATION_MODE_GAZE_TRACKER) {
 			processModeGazeTracker(appState);
-		}
+		}*/
+		destroyWindow("Canvas");
+		return true;
 	}
 
 	imshow("Canvas", canvas);
@@ -160,10 +159,10 @@ bool Calibrator::collectCalibrationData(ApplicationState &appState)
 {
 	Point eyeCenter;
 	if (appState.usedEye == EYE_LEFT) {
-		eyeCenter = appState.rEyeRelativeCenterPoint;
+		eyeCenter = appState.lEyeRelativeCenterPoint;
 	}
 	else {
-		eyeCenter = appState.lEyeRelativeCenterPoint;
+		eyeCenter = appState.rEyeRelativeCenterPoint;
 	}
 
 	canvas = Mat::zeros(Size(1920, 1000), CV_8U);
@@ -187,7 +186,7 @@ bool Calibrator::collectCalibrationData(ApplicationState &appState)
 
 	//Showing four points in the conrens obtains more accuracy calibration data!
 	while (leftX.size() < dCounter) {
-		circle(canvas, Point(canvas.cols / 4 - 50, canvas.rows / 4 - 50), 20, Scalar(255, 255, 255), 2);
+		circle(canvas, Point(canvas.cols / 4 - 50, canvas.rows / 4 - 50), 50, Scalar(255, 255, 255), 3);
 		
 		leftX.push_back(eyeCenter.x);
 		topY.push_back(eyeCenter.y);
@@ -197,7 +196,7 @@ bool Calibrator::collectCalibrationData(ApplicationState &appState)
 	}
 
 	while (leftX.size() < dCounter * 2) {
-		circle(canvas, Point(canvas.cols / 4 - 50, canvas.rows / 4 * 3 + 50), 20, Scalar(255, 255, 255), 2);
+		circle(canvas, Point(canvas.cols / 4 - 50, canvas.rows / 4 * 3 + 50), 50, Scalar(255, 255, 255), 3);
 		
 		leftX.push_back(eyeCenter.x);
 		bottomY.push_back(eyeCenter.y);
@@ -207,7 +206,7 @@ bool Calibrator::collectCalibrationData(ApplicationState &appState)
 	}
 
 	while (rightX.size() < dCounter) {
-		circle(canvas, Point(canvas.cols / 4 * 3 + 50, canvas.rows / 4 - 50), 20, Scalar(255, 255, 255), 2);
+		circle(canvas, Point(canvas.cols / 4 * 3 + 50, canvas.rows / 4 - 50), 50, Scalar(255, 255, 255), 3);
 		
 		rightX.push_back(eyeCenter.x);
 		topY.push_back(eyeCenter.y);
@@ -217,7 +216,7 @@ bool Calibrator::collectCalibrationData(ApplicationState &appState)
 	}
 
 	while (rightX.size() < dCounter * 2) {
-		circle(canvas, Point(canvas.cols / 4 * 3 + 50, canvas.rows / 4 * 3 + 50), 20, Scalar(255, 255, 255), 2);
+		circle(canvas, Point(canvas.cols / 4 * 3 + 50, canvas.rows / 4 * 3 + 50), 50, Scalar(255, 255, 255), 3);
 		
 		rightX.push_back(eyeCenter.x);
 		bottomY.push_back(eyeCenter.y);
@@ -350,14 +349,18 @@ void Calibrator::computeCallibrationData(ApplicationState &appState)
 	}
 
 	appState.leftFactor = abs(appState.eyeMeanCenterPoint.x - this->mLeftX) / 960.0;
-	appState.rightFactor = abs(appState.eyeAproxCenterPoint.x - this->mRightX) / 960.0;
+	appState.rightFactor = abs(appState.eyeMeanCenterPoint.x - this->mRightX) / 960.0;
+
+
 
 	std::cout <<"==========================COMPUTED DATA=============================" << std::endl;
 	std::cout << "EyemeanCenterPoint" << appState.eyeMeanCenterPoint << std::endl;
 	std::cout << "InitHeadOX" << appState.initHeadOX << std::endl;
 	std::cout << "InitHeadOY" << appState.initHeadOY << std::endl;
-	std::cout << "Mleft" << appState.leftFactor<< std::endl;
-	std::cout << "MRight" << appState.rightFactor << std::endl;
+	std::cout << "Left Factor" << appState.leftFactor<< std::endl;
+	std::cout << "Right Factor" << appState.rightFactor << std::endl;
+	std::cout << "mRight" << this->mRightX << std::endl;
+	std::cout << "mLeft" << this->mLeftX << std::endl;
 	std::cout << "===================================================================" << std::endl;
 
 	appState.isCalibrated = true;

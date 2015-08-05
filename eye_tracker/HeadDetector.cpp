@@ -152,10 +152,10 @@ bool HeadDetector::moduleProcess(ApplicationState &appState)
 		appState.deltaHeadOY = appState.initHeadOY - appState.headOY;
 	}
 
-	std::cout << "======================================================================================" << std::endl;
+	/*std::cout << "======================================================================================" << std::endl;
 	std::cout << "deltaHeadOX" << appState.deltaHeadOX << std::endl;
 	std::cout << "deltaHeadOX" << appState.deltaHeadOY << std::endl;
-	std::cout << "======================================================================================" << std::endl;
+	std::cout << "======================================================================================" << std::endl;*/
 	
 	return true;
 }
