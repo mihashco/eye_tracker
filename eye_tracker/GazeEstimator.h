@@ -5,6 +5,7 @@
 #include "opencv2\opencv.hpp"
 
 #include "Kalman.h"
+#include <fstream>
 
 using namespace cv;
 
@@ -16,6 +17,7 @@ private:
 	Mat rotation;
 
 	Kalman outKF;
+	std::ofstream testResults;
 
 public:
 	GazeEstimator();
