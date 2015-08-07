@@ -21,11 +21,16 @@ GazeEstimator::GazeEstimator()
 	outKF.setProcessNoiseCov(100.0);
 	outKF.setMeasurementNoiseCov(120.0);
 	outKF.setErrorCovPost(100.0);
+	
+	testResults.open("testResults.txt");
 }
 
 
 GazeEstimator::~GazeEstimator()
 {
+	if(testResults.good() == true) {
+		testResults.close();
+	}
 }
 
 void GazeEstimator::moduleInit(ApplicationState &appState)
@@ -73,8 +78,22 @@ bool GazeEstimator::moduleProcess(ApplicationState &appState)
 				circle(testCanvas, Point(640/2, 540 / 2), 100, Scalar(0, 0, 255), 5);
 				static vector<Point> tc1;
 				tc1.push_back(out);
-				currentTC++;
 				
+				Point ref(640 / 2, 540 / 2);
+				if(currentTC == 0) {
+					testResults << "Test Point #0" << std::endl;	
+				}
+				
+				double absoluteErrorX = abs(ref.x - out.x);
+				double absoluteErrorY = abs(ref.y - out.y);
+				
+				if(out.x >= 0 && out.y >= 0)
+					relativeErrorX = abs(ref.x - out.x) / out.x
+					relativeErrorY = abs(ref.y - out.y) / out.y
+				
+				testResults << "[" << currentTC << "]\t" << absoluteErrorX << "\t" << absoluteErrorY << "\t" << relativeErrorX << "\t" << relativeErrorY << std::endl;
+				
+				currentTC++;
 				if(currentTC == testCasesPerRegion) {
 					testData.push_back(tc1);
 					currentTC = 0;
