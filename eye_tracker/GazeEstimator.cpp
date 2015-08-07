@@ -55,6 +55,99 @@ bool GazeEstimator::moduleProcess(ApplicationState &appState)
 		flip(gazeCanvas, gazeCanvas, 0);
 		std::cout << out << std::endl;
 		imshow("GAZE_DEBUG", gazeCanvas);
+	} 
+	else if (appSAtet.gzMode == GAZE_TEST) {
+		Mat testCanvas = Mat::zeros(Size(1920, 1080), CV_8UC3);
+		int testCasesPerRegion = 100; //TODO: move this to the AppState
+		int regions = 6; //TODO: move this to the AppState
+		int currentTC = 0;
+		int currentRegion = 0;
+		
+		int rectWidth = 1920 / 3;
+		int rectHeight = 1080 / 2;
+		
+		static vector<vector<Point> > testData;
+		
+		switch (currentRegion) {
+			case 0:
+				circle(testCanvas, Point(640/2, 540 / 2), 100, Scalar(0, 0, 255), 5);
+				static vector<Point> tc1;
+				tc1.push_back(out);
+				currentTC++;
+				
+				if(currentTC == testCasesPerRegion) {
+					testData.push_back(tc1);
+					currentTC = 0;
+					currentRegion++;
+				}
+				
+				break;
+			case 1:
+				circle(testCanvas, Point(640 + 640 / 2, 540 / 2), 100, Scalar(0, 0, 255), 5);
+				static vector<Point> tc2;
+				tc2.push_back(out);
+				currentTC++;
+				
+				if(currentTC == testCasesPerRegion) {
+					testData.push_back(tc2);
+					currentTC = 0;
+					currentRegion++;
+				}
+				
+				break;
+			case 2:
+				circle(testCanvas, Point(640 * 2 + 640 / 2, 540 / 2), 100, Scalar(0, 0, 255), 5);
+				static vector<Point> tc3;
+				tc3.push_back(out);
+				currentTC++;
+				
+				if(currentTC == testCasesPerRegion) {
+					testData.push_back(tc3);
+					currentTC = 0;
+					currentRegion++;
+				}
+				
+				break;
+			case 3:
+				circle(testCanvas, Point(640/2, 540 + 540 / 2), 100, Scalar(0, 0, 255), 5);
+				static vector<Point> tc4;
+				tc4.push_back(out);
+				currentTC++;
+				
+				if(currentTC == testCasesPerRegion) {
+					testData.push_back(tc4);
+					currentTC = 0;
+					currentRegion++;
+				}
+				break;
+			case 4:
+				circle(testCanvas, Point(640 + 640 / 2, 540 + 540 / 2), 100, Scalar(0, 0, 255), 5);
+				static vector<Point> tc5;
+				tc5.push_back(out);
+				currentTC++;
+				
+				if(currentTC == testCasesPerRegion) {
+					testData.push_back(tc5);
+					currentTC = 0;
+					currentRegion++;
+				}
+				break;
+			case 5:
+				circle(testCanvas, Point(640 * 2 + 640 / 2, 540 + 540 / 2), 100, Scalar(0, 0, 255), 5);
+				static vector<Point> tc6;
+				tc5.push_back(out);
+				currentTC++;
+				
+				if(currentTC == testCasesPerRegion) {
+					testData.push_back(tc6);
+					currentTC = 0;
+					currentRegion++;
+				}
+				break;
+			default:
+				//TODO: implement function for calculate test results.
+				break;
+		}
 	}
 
 	return true;
