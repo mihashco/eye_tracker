@@ -159,10 +159,10 @@ bool Calibrator::collectCalibrationData(ApplicationState &appState)
 {
 	Point eyeCenter;
 	if (appState.usedEye == EYE_LEFT) {
-		eyeCenter = appState.lEyeRelativeCenterPoint;
+		eyeCenter = appState.lEyeCenterPoint;
 	}
 	else {
-		eyeCenter = appState.rEyeRelativeCenterPoint;
+		eyeCenter = appState.rEyeCenterPoint;
 	}
 
 	canvas = Mat::zeros(Size(1920, 1000), CV_8U);
@@ -350,8 +350,6 @@ void Calibrator::computeCallibrationData(ApplicationState &appState)
 
 	appState.leftFactor = abs(appState.eyeMeanCenterPoint.x - this->mLeftX) / 960.0;
 	appState.rightFactor = abs(appState.eyeMeanCenterPoint.x - this->mRightX) / 960.0;
-
-
 
 	std::cout <<"==========================COMPUTED DATA=============================" << std::endl;
 	std::cout << "EyemeanCenterPoint" << appState.eyeMeanCenterPoint << std::endl;

@@ -4,6 +4,8 @@
 #include "AppModule.h"
 #include "opencv2\opencv.hpp"
 
+#include "Kalman.h"
+
 using namespace cv;
 
 class GazeEstimator : public AppModule
@@ -12,6 +14,8 @@ private:
 	Mat heatMap;
 	Mat gazeCanvas;
 	Mat rotation;
+
+	Kalman outKF;
 
 public:
 	GazeEstimator();

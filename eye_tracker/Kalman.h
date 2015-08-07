@@ -13,6 +13,9 @@ public:
 	~Kalman();
 
 	Point getPoint(Point ref);
+	void setProcessNoiseCov(double s);
+	void setMeasurementNoiseCov(double s);
+	void setErrorCovPost(double s);
 };
 
 #endif

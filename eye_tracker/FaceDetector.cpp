@@ -75,12 +75,11 @@ bool FaceDetector::moduleProcess(ApplicationState &appState)
 	appState.faceRect = r;
 
 	/*Detect rest face features*/
-	eyeLclassifier.detectMultiScale(appState.frameGray(eyeAreaLeft), eyesLeft, 1.05, 5, CASCADE_FIND_BIGGEST_OBJECT | CASCADE_SCALE_IMAGE, Size(50, 40), Size(80, 60));
-	eyeLclassifier.detectMultiScale(appState.frameGray(eyeAreaRight), eyesRight, 1.05, 5, CASCADE_FIND_BIGGEST_OBJECT | CASCADE_SCALE_IMAGE, Size(50, 40), Size(90, 70));
+	eyeLclassifier.detectMultiScale(appState.frameGray(eyeAreaLeft), eyesLeft, 1.05, 5, CASCADE_FIND_BIGGEST_OBJECT | CASCADE_SCALE_IMAGE, Size(100, 80));
+	eyeLclassifier.detectMultiScale(appState.frameGray(eyeAreaRight), eyesRight, 1.05, 5, CASCADE_FIND_BIGGEST_OBJECT | CASCADE_SCALE_IMAGE, Size(100, 80));
 	noseClassifier.detectMultiScale(appState.frameGray(noseArea), nose, 1.05, 5, CASCADE_FIND_BIGGEST_OBJECT | CASCADE_SCALE_IMAGE);
 	mouthClassifier.detectMultiScale(appState.frameGray(mouthArea), mouth, 1.1, 2, CASCADE_FIND_BIGGEST_OBJECT | CASCADE_SCALE_IMAGE, Size(100, 70), Size(160, 110));
 
-	/*Left eye detection*/
 	for (int i = 0; i < eyesLeft.size(); i++)
 	{
 		Rect e = eyesLeft[i];
@@ -94,8 +93,7 @@ bool FaceDetector::moduleProcess(ApplicationState &appState)
 		appState.lEyeMat = appState.frameGray(eyeRectangle);
 		appState.lEyeCenterPoint = minDetector.detect(appState.frameGray(eyeRectangle), relCenterLeft, Point(e.x, e.y), leftPx, leftPy);
 		appState.lEyeRelativeCenterPoint = Point(appState.lEyeCenterPoint.x + eyeRectangle.x, appState.lEyeCenterPoint.y + eyeRectangle.y);
-
-		appState.lEyeRelativeCenterPoint = kFilterLeye.getPoint(appState.lEyeRelativeCenterPoint);
+		appState.lEyeCenterPoint = kFilterLeye.getPoint(appState.lEyeCenterPoint);
 	}
 
 	for (int i = 0; i < eyesRight.size(); i++)
@@ -109,8 +107,8 @@ bool FaceDetector::moduleProcess(ApplicationState &appState)
 
 		appState.rEyeMat = appState.frameGray(eyeRectangle);
 		appState.rEyeCenterPoint = minDetector.detect(appState.frameGray(eyeRectangle), relCenterRight, Point(e.x, e.y), rightPx, rightPy);
-		appState.rEyeRelativeCenterPoint = Point(appState.rEyeCenterPoint.x + eyeRectangle.x, appState.rEyeCenterPoint.y+eyeRectangle.y);
-		appState.rEyeRelativeCenterPoint = kFilterReye.getPoint(appState.rEyeRelativeCenterPoint);
+		appState.rEyeRelativeCenterPoint = Point(appState.rEyeCenterPoint.x + eyeRectangle.x, appState.rEyeCenterPoint.y + eyeRectangle.y);
+		appState.rEyeCenterPoint = kFilterReye.getPoint(appState.rEyeCenterPoint);
 	}
 
 	for (int i = 0; i < nose.size(); i++) {
@@ -134,10 +132,10 @@ bool FaceDetector::moduleProcess(ApplicationState &appState)
 	Point usedEye;
 
 	if (appState.usedEye == EYE_LEFT) {
-		usedEye = appState.lEyeRelativeCenterPoint;
+		usedEye = appState.lEyeCenterPoint;
 	}
 	else {
-		usedEye = appState.rEyeRelativeCenterPoint;
+		usedEye = appState.rEyeCenterPoint;
 	}
 
 	if (appState.isCalibrated) {
@@ -145,10 +143,10 @@ bool FaceDetector::moduleProcess(ApplicationState &appState)
 		appState.eyeDeltaY = appState.eyeMeanCenterPoint.y - usedEye.y;
 	}
 
-	std::cout << "======================================================================================" << std::endl;
+	/*std::cout << "=========================================================" << std::endl;
 	std::cout << "eyeDeltaX" << appState.eyeDeltaX << std::endl;
 	std::cout << "eyeDeltaY" << appState.eyeDeltaY << std::endl;
-	std::cout << "======================================================================================" << std::endl;
+	std::cout << "=========================================================" << std::endl;*/
 
 	circle(appState.frameSrc, appState.lEyeRelativeCenterPoint, 10, Scalar(255, 0, 0), 3);
 	circle(appState.frameSrc, appState.rEyeRelativeCenterPoint, 10, Scalar(0, 0, 255), 3);

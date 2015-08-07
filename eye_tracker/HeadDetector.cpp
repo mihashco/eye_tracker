@@ -35,8 +35,6 @@ bool HeadDetector::moduleProcess(ApplicationState &appState)
 	Mat visibleRangeOut = Mat::zeros(Size(1920, 1080), appState.frameSrc.type());*/
 
 	//static int im_viewed = 0;
-
-	
 	//This is ok
 	/*int x = appState.headAproxCenterPoint.x * 1.5;
 	int y = appState.headAproxCenterPoint.y * 1.5;*/

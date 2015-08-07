@@ -37,3 +37,18 @@ Point Kalman::getPoint(Point ref)
 	Mat est = kFilter->correct(measurement);
 	return Point(est.at<float>(0), est.at<float>(1));
 }
+
+void Kalman::setErrorCovPost(double s)
+{
+	setIdentity(kFilter->processNoiseCov, Scalar::all(s));
+}
+
+void Kalman::setMeasurementNoiseCov(double s)
+{
+	setIdentity(kFilter->measurementNoiseCov, Scalar::all(s));
+}
+
+void Kalman::setProcessNoiseCov(double s)
+{
+	setIdentity(kFilter->errorCovPost, Scalar::all(s));
+}

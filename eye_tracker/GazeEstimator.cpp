@@ -17,6 +17,10 @@ GazeEstimator::GazeEstimator()
 	//checkedImage = imread("C:\\Users\\mszcz_000\\Desktop\\fhd\\test1.jpg");
 	namedWindow("GAZE_DEBUG", 0);
 	moveWindow("GAZE_DEBUG", 0, 0);
+
+	outKF.setProcessNoiseCov(100.0);
+	outKF.setMeasurementNoiseCov(120.0);
+	outKF.setErrorCovPost(100.0);
 }
 
 
@@ -26,7 +30,6 @@ GazeEstimator::~GazeEstimator()
 
 void GazeEstimator::moduleInit(ApplicationState &appState)
 {
-	std::cout << "GAZE module init" << std::endl;
 	this->heatMap = Mat::zeros(Size(1920, 1080), CV_8UC3);
 }
 
@@ -36,13 +39,15 @@ bool GazeEstimator::moduleProcess(ApplicationState &appState)
 	double usedFactor;
 
 	if (appState.eyeDeltaX > 0) {
-		usedFactor = appState.rightFactor;
+		usedFactor = appState.rightFactor * 3.0;
 	}
 	else {
-		usedFactor = appState.leftFactor;
+		usedFactor = appState.leftFactor * 1.2;
 	}
-	
-	Point out(appState.headCenterPoint.x * 1.5 - appState.eyeDeltaX / usedFactor, appState.headCenterPoint.y * 1.5 - appState.eyeDeltaY);
+
+	Point out(appState.headCenterPoint.x - appState.eyeDeltaX / usedFactor, appState.headCenterPoint.y - appState.eyeDeltaY);
+
+	out = outKF.getPoint(out);
 	circle(gazeCanvas, out, 200, Scalar(255, 0, 0), 3);
 
 	if (appState.gzMode == GAZE_DEBUG) {
