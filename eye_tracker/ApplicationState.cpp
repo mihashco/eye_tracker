@@ -8,13 +8,13 @@ ApplicationState::ApplicationState()
 	this->frameHeight = 720;
 	
 	this->headAngleRef = HEAD_NOSE;
-	this->usedEye = EYE_RIGHT;
+	this->usedEye = EYE_LEFT;
 
 	this->heatMapMat = Mat::zeros(Size(1920, 1080), 16);
 	this->isCalibrated = false;
 
 	this->measureTime = 200;
-	this->gzMode = GAZE_DEBUG;
+	this->gzMode = GAZE_TEST;
 }
 
 ApplicationState::~ApplicationState() 

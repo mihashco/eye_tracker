@@ -37,5 +37,11 @@ bool FramePreprocessor::moduleProcess(ApplicationState &appState)
 	GaussianBlur(appState.frameGray, appState.frameGray, Size(5, 5), 3, 3);
 	//equalizeHist(appState.frameGray, appState.frameGray);
 
+	Mat a = Mat::zeros(Size(5, 5), CV_8UC1);
+	Mat b = Mat::zeros(Size(5, 5), CV_8UC1);
+
+	Mat c = a + b;
+
+
 	return true;
 }

@@ -15,6 +15,7 @@ private:
 
 	HoughDetector hDetector;
 
+
 	static const int TM_SQDIFF = 0;
 	static const int TM_SQDIFF_NORMED = 1;
 	static const int TM_CCOEFF = 2;

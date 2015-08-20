@@ -7,6 +7,7 @@
 #include "CustomEyeCenterDetector.h"
 #include "LaplaceDetector.h"
 #include "MinDetector.h"
+#include "TemplateDetector.h"
 #include "Calibrator.h"
 #include "Kalman.h"
 
@@ -35,6 +36,8 @@ private:
 	MeansOfGradientsDetector meansOfGradientsDetector;
 	LaplaceDetector laplaceDetector;
 	MinDetector minDetector;
+	CustomEyeCenterDetector cstDetector;
+	TemplateDetector tmpDetector;
 	Calibrator calibrator;
 
 	Timer benchmark;
@@ -43,6 +46,8 @@ private:
 	Kalman kFilterReye;
 	Kalman kFilterNose;
 	Kalman KFilterMouth;
+
+	bool templAcquired;
 public:
 	FaceDetector();
 	~FaceDetector();

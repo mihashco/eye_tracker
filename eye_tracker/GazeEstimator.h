@@ -19,6 +19,8 @@ private:
 	Kalman outKF;
 	std::ofstream testResults;
 
+	int currentTC;
+	int currentRegion;
 public:
 	GazeEstimator();
 	~GazeEstimator();

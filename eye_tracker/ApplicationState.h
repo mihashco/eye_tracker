@@ -58,6 +58,7 @@ public:
 	Mat faceMat; /*best face candidate*/
 	Mat lEyeMat; /*best left eye candidate*/
 	Mat rEyeMat; /*best right eye candidate*/
+	Mat eyeTemplate;
 
 	/*This variables are used for calculate head parameters*/
 	Rect faceRect;

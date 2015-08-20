@@ -15,14 +15,16 @@ GazeEstimator::GazeEstimator()
 
 	//visited = Mat::zeros(Size(1920, 1080), CV_8UC1);
 	//checkedImage = imread("C:\\Users\\mszcz_000\\Desktop\\fhd\\test1.jpg");
-	namedWindow("GAZE_DEBUG", 0);
-	moveWindow("GAZE_DEBUG", 0, 0);
+	namedWindow("GAZE", 0);
+	moveWindow("GAZE", 0, 0);
 
 	outKF.setProcessNoiseCov(100.0);
 	outKF.setMeasurementNoiseCov(120.0);
 	outKF.setErrorCovPost(100.0);
 	
 	testResults.open("testResults.txt");
+	currentTC = 0;
+	currentRegion = 0;
 }
 
 
@@ -40,6 +42,9 @@ void GazeEstimator::moduleInit(ApplicationState &appState)
 
 bool GazeEstimator::moduleProcess(ApplicationState &appState)
 {
+	if (!appState.isCalibrated)
+		return true;
+
 	gazeCanvas = Mat::zeros(Size(1920, 1080), CV_8UC3);
 	double usedFactor;
 
@@ -50,52 +55,38 @@ bool GazeEstimator::moduleProcess(ApplicationState &appState)
 		usedFactor = appState.leftFactor * 1.2;
 	}
 
-	Point out(appState.headCenterPoint.x - appState.eyeDeltaX / usedFactor, appState.headCenterPoint.y - appState.eyeDeltaY);
+	Point out(appState.headCenterPoint.x - appState.eyeDeltaX / usedFactor, appState.headCenterPoint.y - appState.eyeDeltaY * 100);
 
 	out = outKF.getPoint(out);
 	circle(gazeCanvas, out, 200, Scalar(255, 0, 0), 3);
 
 	if (appState.gzMode == GAZE_DEBUG) {
-		warpAffine(gazeCanvas, gazeCanvas, this->rotation, gazeCanvas.size());
-		flip(gazeCanvas, gazeCanvas, 0);
-		std::cout << out << std::endl;
+		//warpAffine(gazeCanvas, gazeCanvas, this->rotation, gazeCanvas.size());
+		//flip(gazeCanvas, gazeCanvas, 0);
+		//std::cout << out << std::endl;
 		imshow("GAZE_DEBUG", gazeCanvas);
 	} 
-	else if (appSAtet.gzMode == GAZE_TEST) {
+	else if (appState.gzMode == GAZE_TEST) {
 		Mat testCanvas = Mat::zeros(Size(1920, 1080), CV_8UC3);
 		int testCasesPerRegion = 100; //TODO: move this to the AppState
 		int regions = 6; //TODO: move this to the AppState
-		int currentTC = 0;
-		int currentRegion = 0;
 		
 		int rectWidth = 1920 / 3;
 		int rectHeight = 1080 / 2;
 		
-		static vector<vector<Point> > testData;
+		Point ref;
 		
 		switch (currentRegion) {
 			case 0:
 				circle(testCanvas, Point(640/2, 540 / 2), 100, Scalar(0, 0, 255), 5);
-				static vector<Point> tc1;
-				tc1.push_back(out);
-				
-				Point ref(640 / 2, 540 / 2);
+				ref = Point(640 / 2, 540 / 2);
+
 				if(currentTC == 0) {
 					testResults << "Test Point #0" << std::endl;	
 				}
-				
-				double absoluteErrorX = abs(ref.x - out.x);
-				double absoluteErrorY = abs(ref.y - out.y);
-				
-				if(out.x >= 0 && out.y >= 0)
-					relativeErrorX = abs(ref.x - out.x) / out.x
-					relativeErrorY = abs(ref.y - out.y) / out.y
-				
-				testResults << "[" << currentTC << "]\t" << absoluteErrorX << "\t" << absoluteErrorY << "\t" << relativeErrorX << "\t" << relativeErrorY << std::endl;
-				
+		
 				currentTC++;
 				if(currentTC == testCasesPerRegion) {
-					testData.push_back(tc1);
 					currentTC = 0;
 					currentRegion++;
 				}
@@ -103,12 +94,14 @@ bool GazeEstimator::moduleProcess(ApplicationState &appState)
 				break;
 			case 1:
 				circle(testCanvas, Point(640 + 640 / 2, 540 / 2), 100, Scalar(0, 0, 255), 5);
-				static vector<Point> tc2;
-				tc2.push_back(out);
+				ref = Point(640 + 640 / 2, 540 / 2);
+
+				if (currentTC == 0) {
+					testResults << "Test Point #1" << std::endl;
+				}
 				currentTC++;
 				
 				if(currentTC == testCasesPerRegion) {
-					testData.push_back(tc2);
 					currentTC = 0;
 					currentRegion++;
 				}
@@ -116,12 +109,14 @@ bool GazeEstimator::moduleProcess(ApplicationState &appState)
 				break;
 			case 2:
 				circle(testCanvas, Point(640 * 2 + 640 / 2, 540 / 2), 100, Scalar(0, 0, 255), 5);
-				static vector<Point> tc3;
-				tc3.push_back(out);
+				ref = Point(640 * 2 + 640 / 2, 540 / 2);
+
+				if (currentTC == 0) {
+					testResults << "Test Point #2" << std::endl;
+				}
+
 				currentTC++;
-				
 				if(currentTC == testCasesPerRegion) {
-					testData.push_back(tc3);
 					currentTC = 0;
 					currentRegion++;
 				}
@@ -129,44 +124,69 @@ bool GazeEstimator::moduleProcess(ApplicationState &appState)
 				break;
 			case 3:
 				circle(testCanvas, Point(640/2, 540 + 540 / 2), 100, Scalar(0, 0, 255), 5);
-				static vector<Point> tc4;
-				tc4.push_back(out);
+				ref = Point(640 / 2, 540 + 540 / 2);
+
+				if (currentTC == 0) {
+					testResults << "Test Point #3" << std::endl;
+				}
+
 				currentTC++;
 				
 				if(currentTC == testCasesPerRegion) {
-					testData.push_back(tc4);
 					currentTC = 0;
 					currentRegion++;
 				}
 				break;
 			case 4:
 				circle(testCanvas, Point(640 + 640 / 2, 540 + 540 / 2), 100, Scalar(0, 0, 255), 5);
-				static vector<Point> tc5;
-				tc5.push_back(out);
+				ref = Point(640 + 640 / 2, 540 + 540 / 2);
+
+				if (currentTC == 0) {
+					testResults << "Test Point #4" << std::endl;
+				}
+
 				currentTC++;
 				
 				if(currentTC == testCasesPerRegion) {
-					testData.push_back(tc5);
 					currentTC = 0;
 					currentRegion++;
 				}
 				break;
 			case 5:
 				circle(testCanvas, Point(640 * 2 + 640 / 2, 540 + 540 / 2), 100, Scalar(0, 0, 255), 5);
-				static vector<Point> tc6;
-				tc5.push_back(out);
+				ref = Point(640 * 2 + 640 / 2, 540 + 540 / 2);
+
+				if (currentTC == 0) {
+					testResults << "Test Point #5" << std::endl;
+				}
+
 				currentTC++;
 				
 				if(currentTC == testCasesPerRegion) {
-					testData.push_back(tc6);
 					currentTC = 0;
 					currentRegion++;
 				}
 				break;
 			default:
-				//TODO: implement function for calculate test results.
 				break;
 		}
+
+		circle(testCanvas, out, 200, Scalar(255, 0, 0), 3);
+		imshow("GAZE", testCanvas);
+
+		double absoluteErrorX = abs(ref.x - out.x);
+		double absoluteErrorY = abs(ref.y - out.y);
+
+		double relativeErrorX = 0.0;
+		double relativeErorrY = 0.0;
+
+		if (out.x > 0 && out.y > 0)
+		{
+			relativeErrorX = (double)abs(ref.x - out.x) / out.x;
+			relativeErorrY = (double)abs(ref.y - out.y) / out.y;
+		}
+
+		testResults << "[" << currentTC << "]\t" << absoluteErrorX << "\t" << absoluteErrorY << "\t" << relativeErrorX << "\t" << relativeErorrY << std::endl;
 	}
 
 	return true;

@@ -7,6 +7,8 @@ FaceDetector::FaceDetector()
 	namedWindow("Debug1", 0);
 	moveWindow("Debug1", 0, 300);
 	resizeWindow("Debug1", 426, 240);
+
+	templAcquired = false;
 }
  
 FaceDetector::~FaceDetector()
@@ -94,6 +96,11 @@ bool FaceDetector::moduleProcess(ApplicationState &appState)
 		appState.lEyeCenterPoint = minDetector.detect(appState.frameGray(eyeRectangle), relCenterLeft, Point(e.x, e.y), leftPx, leftPy);
 		appState.lEyeRelativeCenterPoint = Point(appState.lEyeCenterPoint.x + eyeRectangle.x, appState.lEyeCenterPoint.y + eyeRectangle.y);
 		appState.lEyeCenterPoint = kFilterLeye.getPoint(appState.lEyeCenterPoint);
+
+		if (!templAcquired) {
+			appState.eyeTemplate = appState.lEyeMat;
+			templAcquired = true;
+		}
 	}
 
 	for (int i = 0; i < eyesRight.size(); i++)
