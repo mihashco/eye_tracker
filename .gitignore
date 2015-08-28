@@ -32,3 +32,4 @@ eye_tracker/packages/nupengl.core.0.0.0.1/build/native/include/GL/wglew.h
 eye_tracker/packages/nupengl.core.0.0.0.1/build/native/include/GL/glxew.h
 eye_tracker/packages/nupengl.core.0.0.0.1/build/native/include/GL/glut.h
 eye_tracker/packages/nupengl.core.0.0.0.1/build/native/include/GL/glew.h
+*.jpg

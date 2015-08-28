@@ -18,6 +18,7 @@ public:
 
 	void begin(void);
 	void end(void);
+	int getElapsedMiliSeconds(void);
 };
 
 #endif

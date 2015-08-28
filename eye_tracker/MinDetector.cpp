@@ -30,8 +30,8 @@ Point MinDetector::detect(Mat src, Point &relativeCenter, Point rel, int &dx, in
 	minMaxLoc(src, NULL, NULL, &minLoc, NULL);
 	minMaxLoc(forRelative, NULL, NULL, &refminLoc, NULL);
 
-	circle(src, minLoc, 10, Scalar(255, 255, 255), 2);
-	circle(forRelative, refminLoc, 10, Scalar(255, 255, 255), 2);
+	//circle(src, minLoc, 10, Scalar(255, 255, 255), 2);
+	//circle(forRelative, refminLoc, 10, Scalar(255, 255, 255), 2);
 
 	imshow("EYE1", src);
 	imshow("EYE2", forRelative);
