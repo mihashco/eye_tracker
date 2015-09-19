@@ -14,7 +14,7 @@ ApplicationState::ApplicationState()
 	this->isCalibrated = false;
 
 	this->measureTime = 200;
-	this->gzMode = GAZE_TEST;
+	this->gzMode = GAZE_DEBUG;
 }
 
 ApplicationState::~ApplicationState() 

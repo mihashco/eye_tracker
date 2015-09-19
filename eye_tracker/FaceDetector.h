@@ -8,6 +8,7 @@
 #include "LaplaceDetector.h"
 #include "MinDetector.h"
 #include "TemplateDetector.h"
+#include "ThresholdDetector.h"
 #include "Calibrator.h"
 #include "Kalman.h"
 
@@ -38,16 +39,45 @@ private:
 	MinDetector minDetector;
 	CustomEyeCenterDetector cstDetector;
 	TemplateDetector tmpDetector;
-	Calibrator calibrator;
+	ThresholdDetector treshDetector;
 
+	Calibrator calibrator;
 	Timer benchmark;
 
 	Kalman kFilterLeye;
 	Kalman kFilterReye;
 	Kalman kFilterNose;
 	Kalman KFilterMouth;
+	Kalman kFilterRegionFace;
+	Kalman kFilterRegionEyeLeft;
+	Kalman kFilterRegionEyeRight;
 
 	bool templAcquired;
+
+	int faceMinSizeX;
+	int faceMaxSizeX;
+	int faceMinSizeY;
+	int faceMaxSizeY;
+
+	int faceScale;
+	int faceFactor;
+
+	int lEyeMinSizeX;
+	int lEyeMaxSizeX;
+	int lEyeMinSizeY;
+	int lEyeMaxSizeY;
+
+	int lEyeScale;
+	int lEyeFactor;
+
+	int rEyeMinSizeX;
+	int rEyeMaxSizeX;
+	int rEyeMinSizeY;
+	int rEyeMaxSizeY;
+
+	int rEyeScale;
+	int rEyeFactor;
+
 public:
 	FaceDetector();
 	~FaceDetector();
@@ -55,5 +85,7 @@ public:
 	void moduleInit(ApplicationState &appState);
 	bool moduleProcess(ApplicationState &appState);
 	void moduleDeinit(void);
+
+	void showSettingsWin();
 };
 

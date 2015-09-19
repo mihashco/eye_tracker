@@ -26,5 +26,5 @@ void Timer::end()
 int Timer::getElapsedMiliSeconds()
 {
 	this->stop = high_resolution_clock::now();
-	return duration_cast<milliseconds>(this->stop - this->start).count();
+	return duration_cast<microseconds>(this->stop - this->start).count();
 }

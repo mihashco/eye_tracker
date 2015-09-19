@@ -31,7 +31,7 @@ enum GazeMode {
 	GAZE_TEST = 0,
 	GAZE_HEAT_MAP,
 	GAZE_CURSOR_CONTROLLER,
-	GAZE_SIZ_REGIONS,
+	GAZE_SIX_REGIONS,
 	GAZE_DEBUG,
 };
 
@@ -44,12 +44,14 @@ public:
 	GazeMode gzMode;
 
 	bool isCalibrated; /*Calibration status*/
+	bool noFace;
 
 	int measureTime; /*Time of the gaze estimation*/
 
 	int camID;
 	Mat frameSrc;
 	Mat frameDst;
+	Mat frameGrayBlurred;
 	Mat frameGray;
 	int frameWidth;
 	int frameHeight;
@@ -70,9 +72,7 @@ public:
 	Point rEyeCenterPoint;
 	Point lEyeRelativeCenterPoint;
 	Point rEyeRelativeCenterPoint;
-	Point eyeAproxCenterPoint;
-
-	Point eyeForScreenCenterPoint;
+	Point eyeCenter;
 
 	/*FOR GAZE POINTER CALCULATION*/
 	double eyeDeltaX;
@@ -103,6 +103,8 @@ public:
 	int headOY;
 	double deltaHeadOX;
 	double deltaHeadOY;
+	int maxLeft;
+	int maxRight;
 
 	/*OUTPUT*/
 	Point gazePoint;

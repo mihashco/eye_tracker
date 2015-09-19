@@ -28,23 +28,11 @@ bool FramePreprocessor::moduleProcess(ApplicationState &appState)
 		return false;
 
 	cvtColor(appState.frameSrc, appState.frameGray, COLOR_BGR2GRAY);
-	
+	appState.frameGrayBlurred = appState.frameGray.clone();
 
-
-	//imshow("Original", appState.frameGray);
-
-	//fastNlMeansDenoising(appState.frameGray, appState.frameGray);
-	GaussianBlur(appState.frameGray, appState.frameGray, Size(5, 5), 3, 3);
-//	GaussianBlur(appState.frameGray, appState.frameGray, Size(5, 5), 3, 3);
-//	GaussianBlur(appState.frameGray, appState.frameGray, Size(5, 5), 3, 3);
-	//equalizeHist(appState.frameGray, appState.frameGray);
-	//imshow("Blurred", appState.frameGray);
-
-	Mat a = Mat::zeros(Size(5, 5), CV_8UC1);
-	Mat b = Mat::zeros(Size(5, 5), CV_8UC1);
-
-	Mat c = a + b;
-
+	for (int i = 0; i < 35; i++) {
+		blur(appState.frameGrayBlurred, appState.frameGrayBlurred, Size(5, 5));
+	}
 
 	return true;
 }

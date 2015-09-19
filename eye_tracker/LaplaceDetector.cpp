@@ -29,9 +29,6 @@ Point LaplaceDetector::detect(Mat &srcImg)
 	//detect contours.
 	vector<vector<Point> >contours;
 	//findContours(dst, contours, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
-	 
-	
 
-	imshow("Debug1", dst);
 	return Point(-1, -1);
 }

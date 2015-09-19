@@ -5,14 +5,12 @@ HoughDetector::HoughDetector()
 	this->method = CV_HOUGH_GRADIENT;
 	this->dp = 1;
 	this->minDist = 62;
-	this->param1 = 0;
+	this->param1 = 200;
 	this->param2 = 0;
-	this->minRadious = 3;
-	this->maxRadious = 6;
+	this->minRadious = 12;
+	this->maxRadious = 15;
 
-	this->kernel = getStructuringElement(CV_SHAPE_ELLIPSE, Size(5, 5));
-
-	namedWindow("Debug4", 1);
+	this->kernel = getStructuringElement(CV_SHAPE_ELLIPSE, Size(3,3));
 }
 
 HoughDetector::~HoughDetector()
@@ -42,7 +40,9 @@ Point HoughDetector::detect(Mat &img)
 	if (img.empty())
 		return Point(-1,-1);
 
+	equalizeHist(img, img);
 	//erode(img, img, this->kernel);
+	//dilate(img, img, this->kernel);
 	//resize(img, img, Size(img.size().width * 6, img.size().height * 6));
 
 	HoughCircles(img, circles, CV_HOUGH_GRADIENT, this->dp+1, this->minDist+1, this->param1+1, this->param2+1, this->minRadious+1, this->maxRadious+1);
@@ -58,7 +58,7 @@ Point HoughDetector::detect(Mat &img)
 			y = circles[i][1];
 			r = circles[i][2];
 
-			circle(img, Point(x, y), r, Scalar(255, 255, 255));
+			//circle(img, Point(x, y), r, Scalar(255, 255, 255));
 
 			vector<int> circleData;
 			circleData.push_back(x);
@@ -69,7 +69,6 @@ Point HoughDetector::detect(Mat &img)
 
 	//ss << "test_" << file_name_n++ << ".jpg";
 
-	imshow("Debug4", img);
 	//imwrite(ss.str(), img);
 
 	/*Check the best candidate for the eye center. It should be the darkest circle -> pupil is the biggest dark spot on the picture*/
@@ -85,5 +84,8 @@ Point HoughDetector::detect(Mat &img)
 	} else
 		return Point(-1, -1);*/
 
-	return Point(circles[0][0], circles[0][1]);
+	if (circles.size() > 0)
+		return Point(circles[0][0], circles[0][1]);
+	else
+		return Point(-1, -1);
 }

@@ -8,6 +8,7 @@ using namespace cv;
 class Kalman {
 private:
 	KalmanFilter *kFilter;
+	Mat_<float> measurement;
 public:
 	Kalman();
 	~Kalman();

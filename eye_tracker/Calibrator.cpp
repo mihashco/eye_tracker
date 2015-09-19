@@ -11,11 +11,13 @@ bool _internal_sort_points(Point p1, Point p2)
 
 Calibrator::Calibrator() 
 {
-	namedWindow("Canvas", 0);
+	namedWindow("Canvas", CV_WINDOW_FULLSCREEN);
+	moveWindow("Canvas", 0, 0);
 	isCalibrationDataCollected = false;
 	isCalibrated = false;
 
 	cX = 0; cY = 0; lX = 0; rX = 0; tY = 0; bY = 0;
+	mHeadX = 0; mHeadY = 0; mNoseX = 0; mNoseY = 0; mMouthX = 0; mMouthY = 0;
 	canvas = Mat::zeros(Size(scrWidth, scrHeight), CV_8U);
 }
 
@@ -41,14 +43,7 @@ bool Calibrator::moduleProcess(ApplicationState &appState)
 		computeCallibrationData(appState);
 		isCalibrated = true;
 		appState.isCalibrated = true;
-	} 
-	else {
-		/*if (appState.apMode == APPLICATION_MODE_6_REGIONS) {
-			processMode6Regions(appState);
-		}
-		else if (appState.apMode == APPLICATION_MODE_GAZE_TRACKER) {
-			processModeGazeTracker(appState);
-		}*/
+	}  else {
 		destroyWindow("Canvas");
 		return true;
 	}
@@ -60,62 +55,6 @@ bool Calibrator::moduleProcess(ApplicationState &appState)
 void Calibrator::moduleDeinit(void)
 {
 
-}
-
-bool Calibrator::processModeGazeTracker(ApplicationState &appState)
-{
-	Point eyeCenter = appState.lEyeRelativeCenterPoint;
-	Point cursor;
-
-	canvas = Mat::zeros(Size(scrWidth, scrHeight), CV_8U);
-
-	int nx = 0, ny = 0;
-	int dx = 1, dy = 1;
-
-	if (eyeCenter.x - cX <= 0 && eyeCenter.y - cY > 0) {
-		rectangle(canvas, Rect(scrWidth / 2, scrHeight / 2, scrWidth/2, scrHeight/2), Scalar(255, 255, 255), 5);
-
-		if (dlX != 0)
-			dx = (scrWidth / 2) / dlX;
-		if (dbY != 0)
-			dy = (scrHeight / 2) / dbY;
-
-		nx = scrWidth / 2 + abs(cX - eyeCenter.x) * dx;
-		ny = scrHeight / 2 + abs(cY - eyeCenter.y) * dy;
-	} else if (eyeCenter.x - cX <= 0 && eyeCenter.y - cY <= 0) {
-		rectangle(canvas, Rect(scrWidth / 2, 0, scrWidth / 2, scrHeight / 2), Scalar(255, 255, 255), 5);
-
-		if (dlX != 0)
-			dx = (scrWidth / 2) / dlX;
-		if(dtY != 0 )
-			dy = (scrHeight / 2) / dtY;
-
-		nx = scrWidth / 2 + abs(cX - eyeCenter.x) * dx;
-		ny = scrHeight / 2  - abs(cY - eyeCenter.y) * dy;
-	} else if (eyeCenter.x - cX > 0 && eyeCenter.y - cY <= 0) {
-		rectangle(canvas, Rect(0, 0, scrWidth / 2, scrHeight / 2), Scalar(255, 255, 255), 5);
-		
-		if (drX != 0)
-			dx = (scrWidth / 2) / drX;
-		if(dtY != 0)
-			dy = (scrHeight / 2) / dtY;
-
-		nx = scrWidth / 2 - abs(cX - eyeCenter.x) * dx;
-		ny = scrHeight / 2 - abs(cY - eyeCenter.y) * dy;
-	} else if (eyeCenter.x - cX > 0 && eyeCenter.y - cY > 0) {
-		rectangle(canvas, Rect(0, scrHeight / 2, scrWidth / 2, scrHeight / 2), Scalar(255, 255, 255), 5);
-		
-		if (drX != 0)
-			dx = (scrWidth / 2) / drX;
-		if (dbY != 0)
-			dy = (scrHeight / 2) / dbY;
-
-		nx = scrWidth / 2 - abs(cX - eyeCenter.x) * dx;
-		ny = scrHeight / 2 + abs(cY - eyeCenter.y) * dy;
-	}	 
-	circle(canvas, Point(nx, ny), 5, Scalar(255, 255, 255), 2);
-	
-	return true;
 }
 
 bool Calibrator::processMode6Regions(ApplicationState &appState)
@@ -157,23 +96,14 @@ bool Calibrator::processMode6Regions(ApplicationState &appState)
 
 bool Calibrator::collectCalibrationData(ApplicationState &appState)
 {
-	Point eyeCenter;
-	if (appState.usedEye == EYE_LEFT) {
-		eyeCenter = appState.lEyeCenterPoint;
-	}
-	else {
-		eyeCenter = appState.rEyeCenterPoint;
-	}
+	Point eyeCenter = appState.eyeCenter;
 
 	canvas = Mat::zeros(Size(1920, 1000), CV_8U);
 
-	int headDx = abs(appState.headAproxCenterPoint.x - appState.headCenterPoint.x);
-	int headDy = abs(appState.headAproxCenterPoint.y - appState.headCenterPoint.y);
-	if (headDx < 3 && headDy < 3) {
-		this->headCentersVector.push_back(appState.headAproxCenterPoint);
-	}
+	this->headCentersVector.push_back(appState.headAproxCenterPoint);
+	this->noseCentersVector.push_back(appState.noseCenterPoint);
+	this->mouthCentersVector.push_back(appState.mouthCenterPoint);
 
-	/*GET CENTER POINTS*/
 	while (centerX.size() < dCounter * 2) {
 		circle(canvas, Point(canvas.cols / 2, canvas.rows / 2), 50, Scalar(255, 255, 255), 3);
 
@@ -186,7 +116,7 @@ bool Calibrator::collectCalibrationData(ApplicationState &appState)
 
 	//Showing four points in the conrens obtains more accuracy calibration data!
 	while (leftX.size() < dCounter) {
-		circle(canvas, Point(canvas.cols / 4 - 50, canvas.rows / 4 - 50), 50, Scalar(255, 255, 255), 3);
+		circle(canvas, Point(canvas.cols / 4 - 250, canvas.rows / 4 - 150), 50, Scalar(255, 255, 255), 3);
 		
 		leftX.push_back(eyeCenter.x);
 		topY.push_back(eyeCenter.y);
@@ -196,7 +126,7 @@ bool Calibrator::collectCalibrationData(ApplicationState &appState)
 	}
 
 	while (leftX.size() < dCounter * 2) {
-		circle(canvas, Point(canvas.cols / 4 - 50, canvas.rows / 4 * 3 + 50), 50, Scalar(255, 255, 255), 3);
+		circle(canvas, Point(canvas.cols / 4 - 250, canvas.rows / 4 * 3 + 150), 50, Scalar(255, 255, 255), 3);
 		
 		leftX.push_back(eyeCenter.x);
 		bottomY.push_back(eyeCenter.y);
@@ -206,7 +136,7 @@ bool Calibrator::collectCalibrationData(ApplicationState &appState)
 	}
 
 	while (rightX.size() < dCounter) {
-		circle(canvas, Point(canvas.cols / 4 * 3 + 50, canvas.rows / 4 - 50), 50, Scalar(255, 255, 255), 3);
+		circle(canvas, Point(canvas.cols / 4 * 3 + 250, canvas.rows / 4 - 150), 50, Scalar(255, 255, 255), 3);
 		
 		rightX.push_back(eyeCenter.x);
 		topY.push_back(eyeCenter.y);
@@ -216,7 +146,7 @@ bool Calibrator::collectCalibrationData(ApplicationState &appState)
 	}
 
 	while (rightX.size() < dCounter * 2) {
-		circle(canvas, Point(canvas.cols / 4 * 3 + 50, canvas.rows / 4 * 3 + 50), 50, Scalar(255, 255, 255), 3);
+		circle(canvas, Point(canvas.cols / 4 * 3 + 250, canvas.rows / 4 * 3 + 150), 50, Scalar(255, 255, 255), 3);
 		
 		rightX.push_back(eyeCenter.x);
 		bottomY.push_back(eyeCenter.y);
@@ -230,12 +160,12 @@ bool Calibrator::collectCalibrationData(ApplicationState &appState)
 
 void Calibrator::computeCallibrationData(ApplicationState &appState)
 {
-	int zLx = 0;
-	int zRx = 0;
-	int zCx = 0;
-	int zCy = 0;
-	int zTy = 0;
-	int zBy = 0;
+	int zLx = -2;
+	int zRx = -2;
+	int zCx = -2;
+	int zCy = -2;
+	int zTy = -2;
+	int zBy = -2;
 	
 	int c = 0;
 
@@ -246,7 +176,9 @@ void Calibrator::computeCallibrationData(ApplicationState &appState)
 	std::sort(topY.begin(), topY.end());
 	std::sort(bottomY.begin(), bottomY.end());
 
+
 	for (int i = 0; i < leftX.size(); i++) {
+		printf("I[%d], LeftXSize[%d], zLx[%d]\n", i, leftX.size(), zLx);
 		if (zLx != leftX[i]) {
 			zLx = leftX[i];
 			c = std::count(leftX.begin(), leftX.end(), zLx);
@@ -275,6 +207,7 @@ void Calibrator::computeCallibrationData(ApplicationState &appState)
 			c = std::count(centerX.begin(), centerX.end(), zCx);
 			sortedCx.push_back(Point(zCx, c));
 		}
+
 		if (zCy != centerY[i]) {
 			zCy = centerY[i];
 			c = std::count(centerY.begin(), centerY.end(), zCy);
@@ -290,28 +223,27 @@ void Calibrator::computeCallibrationData(ApplicationState &appState)
 	std::sort(sortedCy.begin(), sortedCy.end(), _internal_sort_points);
 
 	int valL = 0, sumL = 0, valR = 0, sumR = 0, valC = 0, sumC = 0, valTy = 0, sumTy = 0, valCy = 0, sumCy = 0;
-
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 2; i++) {
 		valL += sortedLx[i].x * sortedLx[i].y;
 		sumL += sortedLx[i].y;
 	}
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 2; i++) {
 		valR += sortedRx[i].x * sortedRx[i].y;
 		sumR += sortedRx[i].y;
 	}
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 2; i++) {
 		valC += sortedCx[i].x * sortedCx[i].y;
 		sumC += sortedCx[i].y;
 	}
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 2; i++) {
 		valTy += sortedTy[i].x * sortedTy[i].y;
 		sumTy += sortedTy[i].y;
 	}
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 2; i++) {
 		valCy += sortedCy[i].x * sortedCy[i].y;
 		sumCy += sortedCy[i].y;
 	}
@@ -321,35 +253,53 @@ void Calibrator::computeCallibrationData(ApplicationState &appState)
 	this->mCenterX = valC / sumC;
 	this->mCenterY = valCy / sumCy;
 
-	int mx = 0, my = 0;
-	int cx = 0, cy = 0;
+	appState.eyeMeanCenterPoint = Point(mCenterX, mCenterY);
+	appState.leftFactor = abs(appState.eyeMeanCenterPoint.x - this->mLeftX) / 960.0;
+	appState.rightFactor = abs(appState.eyeMeanCenterPoint.x - this->mRightX) / 960.0;
+	appState.maxLeft = this->mLeftX;
+	appState.maxRight = this->mRightX;
 
-	for (int i = 0; i < this->headCentersVector.size(); i++) {
-		mx += this->headCentersVector[i].x;
-		my += this->headCentersVector[i].y;
+	int cnt = 0;
+	for (int i = 10; i < this->headCentersVector.size(); i++) {
+		cnt++;
+		mHeadX += this->headCentersVector[i].x;
+		mHeadY += this->headCentersVector[i].y;
+		mNoseX += this->noseCentersVector[i].x;
+		mNoseY += this->noseCentersVector[i].y;
+		mMouthX += this->mouthCentersVector[i].x;
+		mMouthY += this->mouthCentersVector[i].y;
+
+		//std::cout << "HEAD_CENTER: " << this->headCentersVector[i] << std::endl;
+		//std::cout << "NOSE_CENTER: " << this->mouthCentersVector[i] << std::endl;
+		//std::cout << "MOUTH_CENTER: " << this->noseCentersVector[i] << std::endl;
 	}
 
+	//std::cout << "counter : " << cnt << std::endl;
+		 
 	if (this->headCentersVector.size() > 0)
 	{
-		mx = mx / this->headCentersVector.size();
-		my = my / this->headCentersVector.size();
-	}
+		mHeadX = mHeadX / cnt;
+		mHeadY = mHeadY / cnt;
 
-	appState.eyeMeanCenterPoint = Point(mCenterX, mCenterY);
+		mNoseX = mNoseX / cnt;
+		mNoseY = mNoseY / cnt;
+		
+		mMouthX = mMouthX / cnt;
+		mMouthY = mMouthY / cnt;
+
+		//std::cout << "MHEAD: " << mHeadX << " " << mHeadY << " MNOSE" << mNoseX << " " << mNoseY << std::endl;
+	}
 
 	//Compute initial mx and dx value.
 
 	if (appState.headAngleRef == HEAD_NOSE){
-		appState.initHeadOX = appState.noseAproxCenterPoint.y - my;
-		appState.initHeadOY = appState.noseAproxCenterPoint.x - mx;
+		appState.initHeadOX = mHeadX - mNoseX;
+		appState.initHeadOY = mHeadY - mNoseY;
 	}
 	else {
-		appState.initHeadOX = appState.mouthAproxCenterPoint.y = my;
-		appState.initHeadOY = appState.mouthAproxCenterPoint.x - mx;
+		appState.initHeadOX = mHeadX - mMouthX;
+		appState.initHeadOY = mHeadY - mMouthY;
 	}
-
-	appState.leftFactor = abs(appState.eyeMeanCenterPoint.x - this->mLeftX) / 960.0;
-	appState.rightFactor = abs(appState.eyeMeanCenterPoint.x - this->mRightX) / 960.0;
 
 	std::cout <<"==========================COMPUTED DATA=============================" << std::endl;
 	std::cout << "EyemeanCenterPoint" << appState.eyeMeanCenterPoint << std::endl;
@@ -359,7 +309,13 @@ void Calibrator::computeCallibrationData(ApplicationState &appState)
 	std::cout << "Right Factor" << appState.rightFactor << std::endl;
 	std::cout << "mRight" << this->mRightX << std::endl;
 	std::cout << "mLeft" << this->mLeftX << std::endl;
-	std::cout << "===================================================================" << std::endl;
+	
+	std::cout << "Left Top Point X" << mLeftX << " Y " << mTopY << std::endl;
+	std::cout << "Left Bottom Point X " << mLeftX << " Y " << mBottomY << std::endl;
+	std::cout << "Right Top Point X " << mRightX << " Y " << mTopY << std::endl;
+	std::cout << "Right Bottom Point X" << mRightX << " Y " << mBottomY << std::endl;
+
+ 	std::cout << "===================================================================" << std::endl;
 
 	appState.isCalibrated = true;
 }

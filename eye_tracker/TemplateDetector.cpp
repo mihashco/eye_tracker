@@ -20,7 +20,6 @@ Point TemplateDetector::detect(Mat &img, Mat temp)
 		normalize(img, img, 0, 255, NORM_MINMAX, CV_8UC1);
 		matchTemplate(img, temp, img, CV_TM_CCOEFF);
 		normalize(img, img, 0, 255, NORM_MINMAX, CV_8UC1);
-		imshow("Debug4", img);
 
 		Point minLoc;
 		Point maxLoc;

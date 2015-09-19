@@ -7,10 +7,11 @@ class ThresholdDetector
 {
 private:
 	Mat structuringElement;
+	SimpleBlobDetector smpBlobDetector;
 public:
 	ThresholdDetector();
 	~ThresholdDetector();
 
-	Point detect(Mat &img);
+	Point detect(Mat img);
 };
 

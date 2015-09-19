@@ -54,6 +54,8 @@ private:
 
 	/*Head calibration data*/
 	std::vector<Point> headCentersVector;
+	std::vector<Point> noseCentersVector;
+	std::vector<Point> mouthCentersVector;
 
 	double mCenterX;
 	double mCenterY;
@@ -61,6 +63,8 @@ private:
 	double mRightX;
 	double mTopY;
 	double mBottomY;
+
+	double mHeadX, mHeadY, mNoseX, mNoseY, mMouthX, mMouthY;
 
 	bool processCalibration(ApplicationState &appState);
 	bool collectCalibrationData(ApplicationState &appState);

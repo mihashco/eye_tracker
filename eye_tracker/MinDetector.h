@@ -12,6 +12,7 @@ class MinDetector
 private:
 	Mat mResult;
 	Mat kernel;
+	Mat kernel2;
 
 	HoughDetector hDetector;
 
@@ -29,7 +30,7 @@ public:
 	MinDetector();
 	~MinDetector();
 
-	Point detect(Mat src, Point &relativeCenter, Point rel, int &distanceX, int &distanceY);
+	Point detect(Mat src);
 };
 
 

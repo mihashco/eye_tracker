@@ -15,18 +15,32 @@ private:
 	Mat heatMap;
 	Mat gazeCanvas;
 	Mat rotation;
+	Mat heatMapTestImage;
 
 	Kalman outKF;
 	std::ofstream testResults;
 
 	int currentTC;
 	int currentRegion;
+
+	bool winEyeVisible;
+	bool winHeadVisible;
+
+	int **regionsOutData;
+
 public:
 	GazeEstimator();
 	~GazeEstimator();
 
 	void moduleInit(ApplicationState &appState);
 	bool moduleProcess(ApplicationState &appState);
+
+	bool moduleProcessGazeTest(ApplicationState &appState, Point out);
+	bool moduleProcessGazeDebug(ApplicationState &appState, Point out);
+	bool moduleProcessGazeSixRegions(ApplicationState &appState, Point out);
+	bool moduleProcessGazeSixRegionsTest(ApplicationState &appState, Point out);
+	bool moduleProcessGazeHeatMap(ApplicationState &appState, Point out);
+
 	void moduleDeinit(void);
 };
 
